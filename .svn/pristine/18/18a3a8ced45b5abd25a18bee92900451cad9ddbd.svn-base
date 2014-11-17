@@ -1,0 +1,251 @@
+package ouc.drolo.dao;
+
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
+import org.json.JSONException;
+import org.json.JSONStringer;
+
+import ouc.drolo.util.CloseResource;
+import wph.iframework.dao.Dao;
+import wph.iframework.dao.db.Database;
+
+public class CzkDao extends Dao{
+
+	public CzkDao(Database db) {
+		super(db);
+	}
+
+	/**
+	 *    在工厂系统 中没有 对应手机号， 则 将手机号 插入 到     手机号更新临时表
+	 * @param tel
+	 * @return  有手机号：1 ；没有手机号 ：2
+	 */
+	@Deprecated
+	public int isTelExists(String tel) {
+		int isTel = -1;
+		ResultSet rs = null;
+		
+		String sql = "SELECT * FROM laundry.dbo.客户信息表  WHERE 客户电话=?";
+		PreparedStatement ps = db.getPreparedStatement(sql);
+		try {
+			ps.setString(1, tel);
+			rs = ps.executeQuery();
+			if(rs.next()){  //在 工厂系统 中有 对应的手机号 
+				isTel = 1;
+			}else{
+				// 将手机号 插入 到   手机号更新临时表 
+				String telSql = "insert into 手机号更新临时表(原电话号码,变更时间) values(?,getdate())";
+				PreparedStatement telPs = db.getPreparedStatement(telSql);
+				telPs.setString(1, tel);
+				int flg = telPs.executeUpdate(); //手机号 更新 
+				System.err.println("手机号 插入到  更新临时表 结果     " + flg); 
+				isTel = 2;
+				
+				telPs.close();
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}finally{
+			CloseResource.close(ps, rs); 
+		}
+		return isTel;
+	}
+
+	/**
+	 * 用户查询  充值卡 
+	 * @param tel
+	 * @return
+	 */
+	public String findCzk(String tel) {
+		
+		ResultSet rs = null;
+		JSONStringer json = new JSONStringer();     
+		
+		String sql = "SELECT 充值卡号 AS czk FROM laundry.dbo.客户信息表  WHERE 客户电话=?";
+		
+		PreparedStatement ps = db.getPreparedStatement(sql);
+		try {
+			ps.setString(1, tel);
+			rs = ps.executeQuery();
+			if(rs.next()){
+				try {
+					
+					json.array();
+					json.object().key("czkNum").value(rs.getString("czk")).endObject();
+					while(rs.next()){
+						json.object().key("czkNum").value(rs.getString("czk")).endObject();
+					}
+					json.endArray();
+					return json.toString();
+					
+				} catch (JSONException e) {
+					e.printStackTrace();
+				}
+				
+			}else{
+				// 将手机号 插入 到   手机号更新临时表 
+				String telSql = "insert into 手机号更新临时表(原电话号码,变更时间) values(?,getdate())";
+				PreparedStatement telPs = db.getPreparedStatement(telSql);
+				telPs.setString(1, tel);
+				int flg = telPs.executeUpdate(); //手机号 更新 
+				telPs.close();
+				
+				return "[]";
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}finally{
+			CloseResource.close(ps, rs); 
+		}
+		return "[]";
+	}
+	
+	/**
+	 * 判断 该 充值卡 是否已经 被绑定
+	 * @param czkNum
+	 * @return  已经绑定：0 ；没有被绑定： 1
+	 */
+	@Deprecated
+	public int isBd(String czkNum){
+		int isbd = -1;
+		
+		ResultSet rs = null ;
+		PreparedStatement ps = null;
+		String sql = "SELECT * FROM _users_card WHERE czkNum=?";
+		
+		try {
+			ps = db.getPreparedStatement(sql);
+			ps.setString(1, czkNum);
+			rs = ps.executeQuery();
+			if(rs.next()){
+				isbd = 0; // 已经被绑定了
+			}else{
+				isbd = 1;
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}finally{
+			CloseResource.close(ps, rs); 
+		}
+		return isbd ;
+	}
+	
+	/**
+	 *  绑定  充值卡
+	 * @param tel
+	 * @param czkNum
+	 * @return
+	 */
+	public String bdCzk(String tel,String czkNum) {
+		
+		ResultSet rs = null;
+		String isBd= "-2" ;  // 没有这个充值卡
+		
+		String findCzk = "SELECT czkNum  FROM drolohq.dbo._users_card WHERE czkNum= ?" ;
+		String bdCzk = "INSERT INTO drolohq.dbo._users_card (tel , czkNum ) VALUES (?,?)";
+		
+		PreparedStatement ps = db.getPreparedStatement(findCzk);
+		PreparedStatement bdPs = db.getPreparedStatement(bdCzk);
+		try {
+			ps.setString(1, czkNum);
+			rs = ps.executeQuery();
+			if(!rs.next()){
+					bdPs.setString(1, tel);  
+					bdPs.setString(2, czkNum);  
+					int flg = bdPs.executeUpdate();
+					if(flg!=0){
+						isBd = "1" ; //充值卡 绑定 成功 
+					}
+			}else{
+				isBd = "-1" ; // 该充值卡 已经 绑定
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}finally{
+			try {
+				if(rs != null){
+					rs.close();
+				}
+				if(ps != null){
+					ps.close();
+				}
+				if(bdPs != null){
+					bdPs.close();
+				}
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		return isBd;
+	}
+
+	/**
+	 *   根据 充值卡 卡号 查询 余额  
+	 * @param czkNum
+	 * @param tel 
+	 * @return
+	 */
+	public String findCzkBalance(String czkNum, String tel) {
+		ResultSet rs = null;
+		JSONStringer json = new JSONStringer();     
+		
+		String sql = "SELECT 充值卡金额   AS balance FROM laundry.dbo.客户信息表  WHERE 充值卡号 =? AND 客户电话=?";
+		
+		PreparedStatement ps = db.getPreparedStatement(sql);
+		try {
+			ps.setString(1, czkNum);
+			ps.setString(2, tel);
+			rs = ps.executeQuery();
+			if(rs.next()){
+				try {
+					json.object().key("balance").value(rs.getString("balance")).endObject();
+					return json.toString();
+					
+				} catch (JSONException e) {
+					e.printStackTrace();
+				}
+				
+			}else{
+				return "{}";
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}finally{
+			CloseResource.close(ps, rs); 
+		}
+		return "{}";
+	}
+
+	public String findBalance(String czkNum) {
+		ResultSet rs = null;
+		JSONStringer json = new JSONStringer();     
+		
+		String sql = "SELECT 充值卡金额   AS balance FROM laundry.dbo.客户信息表  WHERE 充值卡号 =?";
+		
+		PreparedStatement ps = db.getPreparedStatement(sql);
+		try {
+			ps.setString(1, czkNum);
+			rs = ps.executeQuery();
+			if(rs.next()){
+				try {
+					json.object().key("balance").value(rs.getString("balance")).endObject();
+					return json.toString();
+					
+				} catch (JSONException e) {
+					e.printStackTrace();
+				}
+				
+			}else{
+				return "{}";
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}finally{
+			CloseResource.close(ps, rs); 
+		}
+		return "{}";
+	}
+
+}

@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE actions PUBLIC "-//WPH-IF" "if.dtd">
+<if>
+	<package namespace="/">
+	  
+	
+		<!--  test  -->
+		<action name="test" class="ouc.drolo.action.kf.TestAction"></action>
+	
+		<!-- user register  -->
+		<action name="userRegister" class="ouc.drolo.action.user.UserRegisterAction"></action>
+		<!--  user login -->
+		<action name="userLogin" class="ouc.drolo.action.user.UserLoginAction"></action>
+		<!--  user yzm   --> 
+		<action name="userYzm" class="ouc.drolo.action.user.UserGetYzmAction"></action> 
+		
+		<!-- 用户注册第二步  提交姓名、密码  --> 
+		<action name="userRt" class="ouc.drolo.action.user.UserRegisterTAction"></action> 
+		
+		<!--  user 修改密码时  获取 验证码    --> 
+		<action name="yzmPsw" class="ouc.drolo.action.user.UserYzmPswAction"></action> 
+		
+		<!--  用户   修改密码时   判断 手机号 是否已经注册   --> 
+		<action name="uIsRegister" class="ouc.drolo.action.user.IsRegisterAction"></action> 
+		
+		
+		<!--  用户   查看当前订单   14/07/07   --> 
+		<action name="uCrrOrder" class="ouc.drolo.action.user.UserCurrentOrderAction"></action> 
+		
+		<!--  用户   查看历史订单   14/07/07   --> 
+		<action name="uHisOrder" class="ouc.drolo.action.user.UserHistoryOrderAction"></action> 
+		
+		<!--  用户  添加联系人   --> 
+		<action name="uAddCon" class="ouc.drolo.action.user.UserAddContactAction"></action> 
+		
+		<!--  用户 查询联系人    --> 
+		<action name="uFindCon" class="ouc.drolo.action.user.UserFindContactAction"></action> 
+		
+		<!--  user 修改密码   --> 
+		<action name="uUpdatePsw" class="ouc.drolo.action.user.UserUpdatePswAction"></action> 
+		
+		<!--  user orderGenerate   --> 
+		<action name="uOrderGenerate" class="ouc.drolo.action.user.UserOrderGenerateAction"></action> 
+		<!--  user findOrder   --> 
+		<action name="userFindOrder" class="ouc.drolo.action.user.UserFindOrderAction"></action> 
+		<!--  user findOrderByOrderId   --> 
+		<action name="userByOrderId" class="ouc.drolo.action.user.UserByOrderIdAction"></action> 
+		 
+		<!--  user UserAddaddressAction   --> 
+		<action name="uAddAddress" class="ouc.drolo.action.user.UserAddaddressAction"></action> 
+		 
+		<!--  user UserFindAddressAction   --> 
+		<action name="uFindAddress" class="ouc.drolo.action.user.UserFindAddressAction"></action> 
+		 <!--  版本更新  -->
+		<action name="updateVersion" class="ouc.drolo.action.staff.StaffUpdateVersionAction"></action>
+
+		<!--  user  查询 订单下 所有衣服名称 和 状态    --> 
+		<action name="uFindClothes" class="ouc.drolo.action.user.UserFindClothesAction"></action> 
+
+		<!--  user  查询  充值卡    --> 
+		<action name="uFindCzk" class="ouc.drolo.action.user.UserFindCZKAction"></action> 
+
+		<!--  user 绑定   充值卡    --> 
+		<action name="uBdCzk" class="ouc.drolo.action.user.UserBdCzkAction"></action> 
+		
+		<!--  user 评价     --> 
+		<action name="uJudge" class="ouc.drolo.action.user.UserJudgmentAction"></action> 
+	
+		<!--  user 评价     --> 
+		<action name="uConfirm" class="ouc.drolo.action.user.UserConfirmOrderAction"></action> 
+
+		<!--  用户  查询 衣物 类别   --> 
+		<action name="UFindClothesCat" class="ouc.drolo.action.user.UFindClothesCatAction"></action>
+
+		<!--  用户  根据 衣物类别  查询 衣物 价格信息   --> 
+		<action name="UFindClothesPrice" class="ouc.drolo.action.user.UFindClothesPriceAction"></action>
+
+
+		<!-- 客服 管理 -->
+		<!--  查询  客服 人员 -->
+		<action name="listkf" class="ouc.drolo.action.kf.ListKfAction"></action>
+		
+		<!-- 条件   查询  客服 人员 -->
+		<action name="listkffl" class="ouc.drolo.action.kf.listkfflAction"></action>
+
+		<!--  修改  客服 人员 信息 显示出来 -->
+		<action name="editKfInfo" class="ouc.drolo.action.kf.EditKfInfoAction"></action>
+
+		<!--  修改  客服 人员 -->
+		<action name="updatekf" class="ouc.drolo.action.kf.EditKfAction"></action>
+		
+		<!-- 删除一个   客服 人员 -->
+		<action name="deletekf" class="ouc.drolo.action.kf.DeleteKfAction"></action>
+		
+		<!-- 添加   一个   客服 人员 -->
+		<action name="addkf" class="ouc.drolo.action.kf.AddKfAction"></action>
+		
+		<!-- 用户信息  -->
+		<action name="listuser" class="ouc.drolo.action.kf.ListUserAction"></action>
+		
+		
+		<!-- 用户信息   06- 18 -->
+		<action name="isUserId" class="ouc.drolo.action.user.IsUserIdAction"></action>
+
+	</package>
+</if>

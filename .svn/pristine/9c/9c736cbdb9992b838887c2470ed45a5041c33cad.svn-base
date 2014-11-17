@@ -1,0 +1,200 @@
+
+package ouc.drolo.webservice;
+
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlType;
+
+
+/**
+ * <p>Java class for anonymous complex type.
+ * 
+ * <p>The following schema fragment specifies the expected content contained within this class.
+ * 
+ * <pre>
+ * &lt;complexType>
+ *   &lt;complexContent>
+ *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
+ *       &lt;sequence>
+ *         &lt;element name="login_name" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0"/>
+ *         &lt;element name="password" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0"/>
+ *         &lt;element name="exec_time" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0"/>
+ *         &lt;element name="mobile" type="{http://tempuri.org/}ArrayOfString" minOccurs="0"/>
+ *         &lt;element name="content" type="{http://tempuri.org/}ArrayOfString" minOccurs="0"/>
+ *         &lt;element name="code" type="{http://tempuri.org/}ArrayOfString" minOccurs="0"/>
+ *       &lt;/sequence>
+ *     &lt;/restriction>
+ *   &lt;/complexContent>
+ * &lt;/complexType>
+ * </pre>
+ * 
+ * 
+ */
+@XmlAccessorType(XmlAccessType.FIELD)
+@XmlType(name = "", propOrder = {
+    "loginName",
+    "password",
+    "execTime",
+    "mobile",
+    "content",
+    "code"
+})
+@XmlRootElement(name = "SendCustom")
+public class SendCustom {
+
+    @XmlElement(name = "login_name")
+    protected String loginName;
+    protected String password;
+    @XmlElement(name = "exec_time")
+    protected String execTime;
+    protected ArrayOfString mobile;
+    protected ArrayOfString content;
+    protected ArrayOfString code;
+
+    /**
+     * Gets the value of the loginName property.
+     * 
+     * @return
+     *     possible object is
+     *     {@link String }
+     *     
+     */
+    public String getLoginName() {
+        return loginName;
+    }
+
+    /**
+     * Sets the value of the loginName property.
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link String }
+     *     
+     */
+    public void setLoginName(String value) {
+        this.loginName = value;
+    }
+
+    /**
+     * Gets the value of the password property.
+     * 
+     * @return
+     *     possible object is
+     *     {@link String }
+     *     
+     */
+    public String getPassword() {
+        return password;
+    }
+
+    /**
+     * Sets the value of the password property.
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link String }
+     *     
+     */
+    public void setPassword(String value) {
+        this.password = value;
+    }
+
+    /**
+     * Gets the value of the execTime property.
+     * 
+     * @return
+     *     possible object is
+     *     {@link String }
+     *     
+     */
+    public String getExecTime() {
+        return execTime;
+    }
+
+    /**
+     * Sets the value of the execTime property.
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link String }
+     *     
+     */
+    public void setExecTime(String value) {
+        this.execTime = value;
+    }
+
+    /**
+     * Gets the value of the mobile property.
+     * 
+     * @return
+     *     possible object is
+     *     {@link ArrayOfString }
+     *     
+     */
+    public ArrayOfString getMobile() {
+        return mobile;
+    }
+
+    /**
+     * Sets the value of the mobile property.
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link ArrayOfString }
+     *     
+     */
+    public void setMobile(ArrayOfString value) {
+        this.mobile = value;
+    }
+
+    /**
+     * Gets the value of the content property.
+     * 
+     * @return
+     *     possible object is
+     *     {@link ArrayOfString }
+     *     
+     */
+    public ArrayOfString getContent() {
+        return content;
+    }
+
+    /**
+     * Sets the value of the content property.
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link ArrayOfString }
+     *     
+     */
+    public void setContent(ArrayOfString value) {
+        this.content = value;
+    }
+
+    /**
+     * Gets the value of the code property.
+     * 
+     * @return
+     *     possible object is
+     *     {@link ArrayOfString }
+     *     
+     */
+    public ArrayOfString getCode() {
+        return code;
+    }
+
+    /**
+     * Sets the value of the code property.
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link ArrayOfString }
+     *     
+     */
+    public void setCode(ArrayOfString value) {
+        this.code = value;
+    }
+
+}

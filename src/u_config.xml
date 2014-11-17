@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE actions PUBLIC "-//WPH-IF" "if.dtd">
+<if>
+	<package namespace="/">
+		<!--  test  -->
+		<action name="test" class="ouc.drolo.action.kf.TestAction"></action>
+	
+		<!-- user register  	-->
+		<action name="userRegister" class="ouc.drolo.action.user.UserRegisterAction"></action>
+	
+		<!--  user login -->
+		<action name="userLogin" class="ouc.drolo.action.user.UserLoginAction"></action>
+		<!--  user yzm   
+		<action name="userYzm" class="ouc.drolo.action.user.UserGetYzmAction"></action> --> 
+		
+		<!-- 用户注册第二步  提交姓名、密码  
+		<action name="userRt" class="ouc.drolo.action.user.UserRegisterTAction"></action> 
+		--> 
+		<!--  user 修改密码时  获取 验证码   
+		<action name="yzmPsw" class="ouc.drolo.action.user.UserYzmPswAction"></action>  --> 
+		
+		<!--  用户   修改密码时   判断 手机号 是否已经注册   --> 
+		<action name="uIsRegister" class="ouc.drolo.action.user.IsRegisterAction"></action> 
+		
+		<!--  用户   查看当前订单   14/07/07   --> 
+		<action name="uCrrOrder" class="ouc.drolo.action.user.UserCurrentOrderAction"></action> 
+		
+		<!--  用户   查看历史订单   14/07/07   --> 
+		<action name="uHisOrder" class="ouc.drolo.action.user.UserHistoryOrderAction"></action> 
+		
+		<!--  用户   查看历史订单   14/08/05   --> 
+		<action name="uDelOrder" class="ouc.drolo.action.user.UserDelOrderAction"></action> 
+		
+		<!--  用户  添加联系人   --> 
+		<action name="uAddCon" class="ouc.drolo.action.user.UserAddContactAction"></action> 
+		
+		<!--  用户 查询联系人    --> 
+		<action name="uFindCon" class="ouc.drolo.action.user.UserFindContactAction"></action> 
+		
+		<!--  用户 删除联系人    --> 
+		<action name="uDelCon" class="ouc.drolo.action.user.UserDelContactAction"></action> 
+		
+		<!--  用户 添加联系人时，获取验证码    --> 
+		<action name="uLxrYzm" class="ouc.drolo.action.user.UserLxrYzmAction"></action> 
+		
+		<!--  user orderGenerate   --> 
+		<action name="uOrderGenerate" class="ouc.drolo.action.user.UserOrderGenerateAction"></action> 
+		<!--  user findOrder   --> 
+		<action name="userFindOrder" class="ouc.drolo.action.user.UserFindOrderAction"></action> 
+		<!--  user findOrderByOrderId   --> 
+		<action name="userByOrderId" class="ouc.drolo.action.user.UserByOrderIdAction"></action> 
+		 
+		<!--  user UserAddaddressAction   --> 
+		<action name="uAddAddress" class="ouc.drolo.action.user.UserAddaddressAction"></action> 
+		 
+		<!--  user UserFindAddressAction   --> 
+		<action name="uFindAddress" class="ouc.drolo.action.user.UserFindAddressAction"></action> 
+		
+		<!--  08/05  删除一个地址  --> 
+		<action name="uDelAddress" class="ouc.drolo.action.user.UserDelAddressAction"></action> 
+		
+		 <!--  版本更新  -->
+		<action name="updateVersion" class="ouc.drolo.action.staff.StaffUpdateVersionAction"></action>
+
+		<!--  user  查询 订单下 所有衣服名称 和 状态    --> 
+		<action name="uFindClothes" class="ouc.drolo.action.user.UserFindClothesAction"></action> 
+
+		<!--  user  查询  充值卡    --> 
+		<action name="uFindCzk" class="ouc.drolo.action.user.UserFindCZKAction"></action> 
+
+		<!--  user 绑定   充值卡    --> 
+		<action name="uBdCzk" class="ouc.drolo.action.user.UserBdCzkAction"></action> 
+		
+		<!--  user 评价     --> 
+		<action name="uJudge" class="ouc.drolo.action.user.UserJudgmentAction"></action> 
+	
+		<!--  user 评价     --> 
+		<action name="uConfirm" class="ouc.drolo.action.user.UserConfirmOrderAction"></action> 
+
+		<!--  用户  查询 衣物 类别   --> 
+		<action name="UFindClothesCat" class="ouc.drolo.action.user.UFindClothesCatAction"></action>
+
+		<!--  用户  根据 衣物类别  查询 衣物 价格信息   --> 
+		<action name="UFindClothesPrice" class="ouc.drolo.action.user.UFindClothesPriceAction"></action>
+
+		<!-- 客服 管理 -->
+		<!--  查询  客服 人员 -->
+		<action name="listkf" class="ouc.drolo.action.kf.ListKfAction"></action>
+		
+		<!-- 条件   查询  客服 人员 -->
+		<action name="listkffl" class="ouc.drolo.action.kf.listkfflAction"></action>
+
+		<!--  修改  客服 人员 信息 显示出来 -->
+		<action name="editKfInfo" class="ouc.drolo.action.kf.EditKfInfoAction"></action>
+
+		<!--  修改  客服 人员 -->
+		<action name="updatekf" class="ouc.drolo.action.kf.EditKfAction"></action>
+		
+		<!-- 删除一个   客服 人员 -->
+		<action name="deletekf" class="ouc.drolo.action.kf.DeleteKfAction"></action>
+		
+		<!-- 添加   一个   客服 人员 -->
+		<action name="addkf" class="ouc.drolo.action.kf.AddKfAction"></action>
+		
+		<!-- 用户信息  -->
+		<action name="listuser" class="ouc.drolo.action.kf.ListUserAction"></action>
+		
+		<!-- 用户信息   06- 18 -->
+		<action name="isUserId" class="ouc.drolo.action.user.IsUserIdAction"></action>
+		
+		<!-- 添加 活动  08-25 -->
+		<action name="addact" class="ouc.drolo.activity.AddActivityAction"></action>
+
+		<!--  更新个人信息  08-30 -->
+		<action name="uInfo" class="ouc.drolo.action.user.UserUpdateInfoAction"></action>
+		 
+		<!--  查询姓名  08-30 -->
+		<action name="uName" class="ouc.drolo.action.user.UserFindNameAction"></action>
+		
+		<!-- 查询活动信息   08-30 -->
+		<action name="uactInfo" class="ouc.drolo.action.user.UserGetActivityInfoAction"></action>
+		
+		<!-- 意见反馈  08-30 -->
+		<action name="usfd" class="ouc.drolo.action.user.UserSgstFeedbackAction"></action>
+		
+		<!-- 修改密码 1、验证码验证  -->
+		<action name="uupy" class="ouc.drolo.action.user.UserUpdatePswYZMAction"></action>
+		<!--  user 修改密码 2、更新密码  --> 
+		<action name="uUpdatePsw" class="ouc.drolo.action.user.UserUpdatePswAction"></action> 
+		
+		<!--  用户获取地址个数 --> 
+		<action name="uaddNum" class="ouc.drolo.action.user.UserGetAddressNumAction"></action> 
+		
+		<!--  异常 --> 
+		<action name="uException" class="ouc.drolo.action.user.UserExceptionAction"></action>
+		
+		<!-- aliyun  接口  修改密码 --> 
+		<action name="aliPswYzm" class="ouc.drolo.action.user.YzmPswAliAction"></action>
+		<!--  user 修改密码时  获取 验证码   
+		<action name="yzmPsw" class="ouc.drolo.action.user.UserYzmPswAction"></action>  --> 
+		<action name="yzmPsw" class="ouc.drolo.action.user.UserYzmPswAliAction"></action>
+		
+		<!-- aliyun 接口 注册获取验证码 --> 
+		<action name="aliRegYzm" class="ouc.drolo.action.user.YzmRegAliAction"></action>
+		<!--  aliyun 注册时 获取验证码   --> 
+		<action name="userYzm" class="ouc.drolo.action.user.UserYzmRegAliAction"></action> 
+		
+		<!--  用户获取余额   --> 
+		<action name="getBalance" class="ouc.drolo.action.change.UserGetBalanceAction"></action> 
+		
+		<!-- 用户注册，在财务创建账户  -->
+		<action name="userRt" class="ouc.drolo.action.change.UserRegCaiwuAction"></action>
+		
+		<!-- 在线充值  -->
+		<action name="deposit" class="ouc.drolo.action.change.DepositAction"></action>
+		
+		<!-- 查看消费充值记录  -->
+		<action name="consumeHistory" class="ouc.drolo.action.change.ConsumeHistoryAction"></action>
+		
+		
+		<!-- 邀请码添加  -->
+		<action name="addInviteCode" class="ouc.drolo.action.user.InviteCodeAction">
+			<database auto="true" transaction="true" /> 
+		</action>
+		
+	</package>
+</if>

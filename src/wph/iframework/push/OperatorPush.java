@@ -1,0 +1,89 @@
+package wph.iframework.push;
+
+import wph.iframework.push.mqtt.MqttUtils;
+
+
+
+public final class OperatorPush
+{
+    private OperatorPush()
+    {
+    }
+    
+    protected static String getTopic(String id)
+    {
+        return "/o/" + id;
+    }
+    
+    /**
+     * 给接线员推送信息，询问是否接受
+     * 
+     * @param id
+     * @param message
+     */
+    public static void areYouAccept(String id, String message)
+    {
+        String topic = getTopic(id);
+        MqttUtils.push("o", topic, "1", message);
+    }
+    /**
+     * 救援车到达目的后救援车推送给接线员
+     */
+    public static void pushAdminis(String id,String message)
+    {
+    	 String topic = getTopic(id);
+         MqttUtils.push("o", topic, "3", message);
+    }
+    /**
+     * 回访成功后推送
+     */
+   public static void huifang(String id, String message){
+	   String topic = getTopic(id);
+       MqttUtils.push("o", topic, "3", message);
+	   
+   }
+   /**
+    * 用户评论成功后推送
+    */
+  public static void userCom(String id, String message){
+	   String topic = getTopic(id);
+      MqttUtils.push("o", topic, "4", message);
+	   
+  }
+    /**
+     * 已经为救援请求自动分配了救援车啦，接线员思考的时间到了
+     * 
+     * @param id
+     * @param message
+     */
+/*    public static void thinkingTimeout(String id, String message)
+    {
+        String topic = getTopic(id);
+        MqttUtils.push("o", topic, "2", message);
+    }*/
+  /**
+   * 送衣回访
+   */
+  public static void songyihuifang(String id, String message)
+  {System.out.println("推送5");
+  String topic = getTopic(id);
+  MqttUtils.push("o", topic, "5", message);
+}
+    /**
+     * 救援车是否接受订单告诉接线员（推送）
+     */
+    public static void jiuIfAccept(String id, String message)
+    {System.out.println("推送1");
+        String topic = getTopic(id);
+        MqttUtils.push("o", topic, "2", message);
+    }
+    
+    /**
+     * 长时间不接单（推送）
+     */
+    public static void noanser(String id, String message){
+    	System.out.println("推送3");
+        String topic = getTopic(id);
+        MqttUtils.push("o", topic, "3", message);
+    }
+}

@@ -1,0 +1,18 @@
+
+#DRIVER=com.microsoft.sqlserver.jdbc.SQLServerDriver
+#URL=jdbc:sqlserver://211.64.154.159:3433;DatabaseName=drolohq
+#USER=sa
+#PASSWORD=1234
+
+#
+DRIVER=com.microsoft.sqlserver.jdbc.SQLServerDriver
+URL=jdbc:sqlserver://drolohq15.sqlserver.rds.aliyuncs.com:3433;DatabaseName=drolohq
+USER=tangzhipu
+PASSWORD=drolohq
+
+# jinan sql server 
+#DRIVER=com.microsoft.sqlserver.jdbc.SQLServerDriver
+#URL=jdbc:sqlserver://192.168.0.200:1433;DatabaseName=drolohq
+#USER=sa
+#PASSWORD=admin1!
+

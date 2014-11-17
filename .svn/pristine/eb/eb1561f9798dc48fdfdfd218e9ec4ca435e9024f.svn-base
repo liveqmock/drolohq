@@ -1,0 +1,98 @@
+package ouc.drolo.action.sjtj;
+
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.List;
+
+import wph.iframework.dao.Dao;
+import wph.iframework.dao.db.Database;
+
+public class DataDao extends Dao{
+
+	public DataDao(Database db) {
+		super(db);
+	}
+
+	//获取列表
+	public List<DataBean> GetList(String strwhere,String strorder){
+		String sql="select s.kfid as 客服人员 ,s.staffId as 物流人员,s.ereaNun as 服务区域,COUNT(o.orderId) as 用户下单量, "
+				+ "COUNT(f.orderId) as 取衣单量,SUM(cast(f.clothesNum as int)) as 取衣数量, "
+				+ "SUM(cast(f.typeMoney as money)) as  取衣总金额,count(sf.orderId) as 送衣单量,count(r.orderId) as 拒单数量,"
+				+ "COUNT(v.orderId) as 用户评价总量,SUM( CASE WHEN v.xypz=3 THEN 1 ELSE 0 END) AS 用户洗衣差评总量,"
+				+ "SUM( CASE WHEN v.xypz=2 THEN 1 ELSE 0 END) AS 用户洗衣中评总量,"
+				+ "SUM( CASE WHEN v.wlfw=3 THEN 1 ELSE 0 END ) AS 用户物流差评总量,"
+				+ "SUM( CASE WHEN v.wlfw=2 THEN 1 ELSE 0 END ) AS 用户物流中评总量  from  _staff s "
+				+ "inner join _order o on s.staffId=o.staffId  left join _financial  f on o.orderId=f.orderId  "
+				+ "left join sendfinish sf on o.orderId = sf.orderId  "
+				+ "left join refuse r on o.orderId=r.orderId left join v_judge v on o.orderId=v.orderId "
+				+ "where 1=1 ";
+		if(!(isInvalid(strwhere)))
+		{
+			sql+=strwhere;
+		}
+		if(!(isInvalid(strorder)))
+		{
+			sql+=" order by "+strorder;
+		}
+		sql +=" group by s.kfid,s.staffId, s.ereaNun";
+		System.err.println(sql);
+		
+		Statement stat = null;
+		ResultSet rs = null;
+		Connection conn = db.getConnection();
+		List<DataBean> list=new ArrayList<DataBean>();
+		try{
+			stat = conn.createStatement();
+			rs = stat.executeQuery(sql);
+			while(rs.next()){
+				DataBean bean=new DataBean();
+				bean.setKfid(rs.getString("客服人员"));
+				bean.setWlid(rs.getString("物流人员"));
+				bean.setFwArea(rs.getString("服务区域")); 
+				bean.setYhdl(rs.getInt("用户下单量"));
+				bean.setQydl(rs.getInt("取衣单量"));
+				bean.setQysl(rs.getInt("取衣数量"));
+				bean.setZje(rs.getFloat("取衣总金额"));
+				bean.setSydl(rs.getInt("送衣单量"));
+				bean.setJdsl(rs.getInt("拒单数量"));
+				bean.setPjzl(rs.getInt("用户评价总量"));
+				bean.setXycpzl(rs.getInt("用户洗衣差评总量"));
+				bean.setXyzpzl(rs.getInt("用户洗衣中评总量"));
+				bean.setWlcpzl(rs.getInt("用户物流差评总量"));
+				bean.setWlzpzl(rs.getInt(14)); 
+				
+				list.add(bean);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if (conn != null)
+					conn.close();
+				if (stat != null)
+					stat.close();
+				if (rs != null)
+					rs.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		return list;
+	}
+	
+	
+	//判断是否空值
+	private boolean isInvalid(String value) {
+		return (value == null || value.length() == 0);
+	}
+	
+	//测试
+	public static void main(String[] args) {
+		System.out.println("");
+	}
+	
+}

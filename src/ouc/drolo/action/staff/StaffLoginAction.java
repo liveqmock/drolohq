@@ -1,0 +1,62 @@
+package ouc.drolo.action.staff;
+
+import java.io.IOException;
+import java.sql.SQLException;
+
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import ouc.drolo.dao.StaffDao;
+import ouc.drolo.domain.Staff;
+import wph.iframework.Action;
+import wph.iframework.dao.db.Database;
+import wph.iframework.dao.db.SqlServer;
+
+/**
+ * 物流人员登录
+ * @author jeep
+ *
+ */
+public class StaffLoginAction extends Action{
+
+	@Override
+	public String execute(HttpServletRequest request,
+			HttpServletResponse response) throws ServletException, IOException {
+		String flag = "-1";
+		String staffId = request.getParameter("staffId");
+		String password = request.getParameter("password");
+		String pushId = request.getParameter("pushId");
+	
+		String longitude = request.getParameter("longitude");
+		String latitude = request.getParameter("latitude");
+		String equipNum = request.getParameter("equipNum");
+		
+		Staff staff = new Staff(staffId);
+		staff.setPassword(password);
+
+		Database db = null;
+		try {
+			db = new SqlServer();
+			db.setAutoCommit(false);
+			StaffDao sd = new StaffDao(db);
+			flag = sd.login(staffId,password,pushId,longitude,latitude,equipNum);
+
+			/*DispatcherDao dDao = new DispatcherDao(db);
+			 Map<String, Object> sMap = dDao.getStaff(staffId);
+	         sMap.put("status", 1);
+	         Dispatcher dispatcher = Dispatcher.getInstance();
+	         dispatcher.onStaffLogin(staffId, sMap);*/
+
+			db.commit();
+			System.out.println("员工号  ：   "+staffId+"     登陆返回结果  ：  "+flag+" pushID : " + pushId);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}finally{
+			db.close();
+		}
+		
+		return flag;
+	}
+	
+}

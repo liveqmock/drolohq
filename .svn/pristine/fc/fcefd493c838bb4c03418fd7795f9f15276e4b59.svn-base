@@ -1,0 +1,220 @@
+$(document).ready(
+		 function(){
+			 
+			// doConnect();
+			 
+			// initAssignMap();
+			// initOrderlist();
+          }
+		);
+
+/**
+ *物流员列表
+ * @param pageNumber
+ */
+function checkAll(pageNumber){
+	var data = $("#orderForm").serialize();
+	page('../orderPage.o', data, pageNumber, 15,
+			'checkAll', function() {
+				//$("#order").attr("disabled", true);// 页面内容不可用
+			}, function() {
+				
+			}, function() {
+				
+			});
+	var div=document.getElementById("addone");
+	div.style.display = "none";
+	var div=document.getElementById("left_top");
+	div.style.display = "block";
+	var div=document.getElementById("jieguo");
+	div.style.display = "block";
+	
+}
+
+/*
+ * 按类别查询配送员信息
+ */
+function serachByquest(pageNumber){
+	var data = $("#qusetorderForm").serialize();
+	page('../PageByquest.o', data, pageNumber, 15,
+			'checkAll', function() {
+				//$("#order").attr("disabled", true);// 页面内容不可用
+			}, function() {
+				//registerCancelSelectAllListener();
+			}, function() {
+				//$("#order").attr("disabled", false);// 页面内容可用
+			});
+}
+
+/*
+ * 更新物留人员信息
+ */
+
+function edit_update(sid){
+	document.getElementById("sid").value=sid;
+	//alert(document.getElementById("sid").value);
+	$.ajax({
+		type : "POST",
+		url : "../insertEidtStafInf.o",// 更新订单，包括救援id" +			
+		data : $("#editor").serialize(),
+		success : function(msg) {
+			
+			if (msg == 1) 
+			{
+			checkAll(1);
+			var div=document.getElementById("left_top");
+			div.style.display = "block";
+			var div=document.getElementById("jieguo");
+			div.style.display = "block";
+			var div=document.getElementById("edit");
+			div.style.display = "none";
+			}
+			else {
+				alert("网络异常");
+			}
+		}
+	});
+}
+
+
+/*
+ * 编辑物流人员信息
+ */
+function editInfo(sid){
+//	alert("ddd");
+	var div=document.getElementById("left_top");
+	div.style.display = "none";
+	var div=document.getElementById("jieguo");
+	div.style.display = "none";
+	var div=document.getElementById("edit");
+	div.style.display = "block";
+	//alert("sid"+sid);
+	$.ajax({
+		type : "POST",
+		url : "../editStafInfo.o?",// 更新订单，包括救援id
+		data : "sid="+sid,
+	
+		success : function(msg) {
+			
+			var obj = eval('(' +msg + ')');
+			var name=obj[0].name;
+			var tel=obj[0].tel;
+			var equipNum=obj[0].equipNum;
+			var ereaNun=obj[0].ereaNun;
+			//alert(name);
+			document.getElementById("editname").value=name;
+			document.getElementById("editphone").value=tel;
+			document.getElementById("editequipNum").value=equipNum;
+			document.getElementById("editereaNun").value=ereaNun;
+			document.getElementById("sid").value=sid;
+				//alert("更新用户信息成功");
+			
+		}
+	});
+}
+
+
+
+/*
+ * 删除一条 客服人员记录
+ */
+function deleteInfo(sid){
+	
+	if(window.confirm("您确定删除么 ")){
+		$.ajax({
+			type : "POST",
+			url : "../deleteInfo.o?",// 更新订单，包括救援id
+			data : "sid="+sid,
+		
+			success : function(msg) {
+				if(msg>0){
+					checkAll(1);
+				alert("删除成功");
+				
+				  //document.getElementById(id).style.background="blue";
+				//this.style.background="blue";
+				//alert("idd"+this.id);
+				}
+				else{
+					alert("删除失败");
+					}
+			}
+		});
+	}
+}
+
+
+/**
+ *  添加物流员 
+ */
+function addstaff(){
+	var div=document.getElementById("left_top");
+	div.style.display = "none";
+	var div=document.getElementById("jieguo");
+	div.style.display = "none";
+	var div=document.getElementById("edit");
+	div.style.display = "none";
+	var div=document.getElementById("addone");
+	div.style.display = "block";
+}
+
+
+function addone_update(){
+	$.ajax({
+		type : "POST",
+		url : "../addoneStaffInfo.o",			
+		data : $("#editoraddone").serialize(),
+		beforeSend: function(){
+			var msg = submitMsg();
+			if(msg.length > 0){
+				alert(msg);
+				$("input[name='editbtnaddaddone']").attr("disabled",false);
+				return false;
+			}
+		},
+		success : function(msg) {
+			
+			if (msg == 1) 
+			{
+				alert("添加用户信息成功");
+				var div=document.getElementById("addone");
+				div.style.display = "none";
+				checkAll(1);
+			}
+			else {
+				alert("网络异常");
+			}
+		}
+	});
+}
+
+function submitMsg(){
+	var msg = "";
+	
+	var name = $("input[name='editnameaddone']").val();
+	var password = $("input[name='editpasswdaddone']").val();
+	var phone = $("input[name='editphoneaddone']").val();
+	var staffid = $("input[name='editstaffNumaddone']").val();
+	var equipNum= $("input[name='editequipNumaddone']").val();
+	var ereaNun = $("input[name='editereaNunaddone']").val();
+	
+	if (name == "") {
+        msg += "请输入用户姓名！\r";
+    }
+    if (password == "") {
+        msg += "请输入密码！\r";
+    }
+    if (phone== "") {
+        msg += "请输入电话！\r";
+    }
+    if (staffid == "") {
+        msg += "请输入员工号！\r";
+    }
+    if (equipNum == "") {
+        msg += "请输入设备号！\r";
+    }
+    if (ereaNun == "") {
+        msg += "请输入区域号！\r";
+    }
+	return msg;
+}

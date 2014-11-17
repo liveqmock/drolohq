@@ -1,0 +1,86 @@
+package ouc.drolo.action.sjtj;
+
+import java.io.IOException;
+import java.sql.SQLException;
+import java.util.List;
+
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
+import wph.iframework.dao.db.Database;
+import wph.iframework.dao.db.SqlServer;
+
+public class DataListServlet extends HttpServlet {
+	private static final long serialVersionUID = 1L;
+	private static Log logger =  LogFactory.getLog(DataListServlet.class);
+	
+	protected void doGet(HttpServletRequest request, HttpServletResponse response) 
+			throws ServletException, IOException {
+		this.doPost(request, response); 
+	}
+
+	protected void doPost(HttpServletRequest request, HttpServletResponse response) 
+			throws ServletException, IOException {
+		request.setCharacterEncoding("UTF-8");
+		response.setContentType("text/html;charset=UTF-8");
+		response.setCharacterEncoding("UTF-8");
+		
+		String datefrom = request.getParameter("datefrom");
+		String dateto = request.getParameter("dateto");
+		String kfid = request.getParameter("kfid");
+		String wlid = request.getParameter("wlid");
+		
+		request.getSession().setAttribute("datefrom", datefrom);
+		request.getSession().setAttribute("dateto", dateto);
+		request.getSession().setAttribute("kfid", kfid);
+		request.getSession().setAttribute("wlid", wlid); 
+		
+		System.err.println(datefrom + "   " + dateto +" : " + kfid +"  : "+ wlid);
+		
+		//查询条件
+		String strwhere = "";
+		if(!isInvalid(datefrom)){
+			strwhere += " and o.generateTime>='"+datefrom+"'";
+		}
+		if(!isInvalid(dateto)){
+			strwhere += " and o.generateTime<='"+(dateto)+" 23:59:59 '";
+		}
+		if(!isInvalid(kfid)){
+			strwhere += " and s.kfid='"+kfid+"'";
+		}
+		if(!isInvalid(wlid)){
+			strwhere += " and s.staffId='"+wlid+"'";
+		}
+		
+		Database db = null; 
+		List<DataBean> dlist = null ;
+		try {
+			db = new SqlServer();
+			DataDao dDao = new DataDao(db);
+			dlist = dDao.GetList(strwhere, "");
+			logger.debug(" size    " + dlist.size()); 
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}finally{
+			db.close();
+		}
+		
+		//TODO  前台 显示两条记录
+		request.getSession().setAttribute("dlist", dlist);
+//		request.setAttribute("dlist", dlist); 
+		request.getRequestDispatcher("/tj/tj.jsp").forward(request, response);
+	}
+	
+	//判断是否空值
+	private boolean isInvalid(String value) {
+		return (value == null || value.length() == 0);
+	}
+
+}

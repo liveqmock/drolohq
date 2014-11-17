@@ -1,0 +1,35 @@
+<%@ page import="wph.iframework.utils.WebsiteUtils" %>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%
+    String basePath = WebsiteUtils.getRootPath(request);
+	int oid = (Integer)request.getSession().getAttribute("oid");
+	String name=(String)request.getSession().getAttribute("name");
+%>
+<link rel="stylesheet" href="<%=basePath%>css/basestyle.css" />
+<div id="HEADER" class="t_header">
+<TABLE id="menu">
+	<TBODY >  
+		<TR>
+		 	<TD align="left" class="menulist menulist_img_logo" height="40">
+		 	 <IMG src="<%=basePath%>images/logo.png" height="100%"><span id="logo"></span><%-- 欢迎<%--<%=name%>！ --%></TD> 
+			<TD align="right" class="menulist menulist_img" height="30">
+			<A href="javascript:online()" id="nav1">上线</A>
+				<IMG src="<%=basePath%>images/tiao002.gif">
+				<A href="javascript:offline();" id="nav1">下线</A>
+				<IMG src="<%=basePath%>images/tiao002.gif">
+				<A href="<%=basePath%>orperator/work.jsp" id="nav1">实时监控</A>
+				<IMG src="<%=basePath%>images/tiao002.gif">
+				 <A href="<%=basePath%>orperator/operatorOrder.jsp" id="nav6">订单管理</A>
+                   <IMG src="<%=basePath%>images/tiao002.gif">
+			
+			
+				<A href="<%=basePath%>loginout.jsp" id="nav6">退出</A>
+			</TD>
+			<TD class="menulist menulist_img" height="30">
+			<%=name%>
+			
+			</TD>
+		</TR>
+	</TBODY>
+</TABLE>
+</div>

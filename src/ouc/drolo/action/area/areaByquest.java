@@ -1,0 +1,108 @@
+package ouc.drolo.action.area;
+
+import java.io.IOException;
+import java.util.Iterator;
+
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import ouc.drolo.dao.OrderDao;
+import ouc.drolo.dao.areaDao;
+import ouc.drolo.domain.Staff;
+import ouc.drolo.domain.area;
+import ouc.drolo.util.XmlUtils;
+
+import wph.iframework.Action;
+import wph.iframework.dao.db.Database;
+import wph.iframework.dao.db.Page;
+
+public class areaByquest extends Action {
+	public String execute(HttpServletRequest request,
+			HttpServletResponse response) throws ServletException, IOException {
+		 String basePath = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort();
+	     int pageNumber = Integer.parseInt(request.getParameter("pageNumber"));
+	     int pageSize = Integer.parseInt(request.getParameter("pageSize"));
+	     String pageMethod = request.getParameter("pageMethod");
+	     
+	     int leibie= Integer.parseInt((request.getParameter("leibie")));
+	     System.out.println("leibie"+leibie);
+	     String questcontext= (request.getParameter("questcontext"));
+	     Page<area> page = new Page<area>();
+	     page.setPageNumber(pageNumber);
+	     page.setPageSize(pageSize);
+	     page.setPageMethod(pageMethod);
+	     Database db = getDatabase();
+	     String str = "";
+	     StringBuffer sb = new StringBuffer();
+	     areaDao pDao  = new  areaDao(db);
+	     
+	     if (!pDao.Byquest(page,leibie,questcontext ))
+	     {
+	         
+	         logger.debug("操作数据库失败！");
+	         return XmlUtils.buildXmlReturnValue(0, "操作数据库失败！");
+	     }
+	     
+	     Iterator<area> iterator = page.iterator();
+	     
+	     int count = 0;
+	     String alt = "";
+	     while (iterator.hasNext())
+	     {
+	         if (count % 2 != 0)
+	         {
+	             alt = "alt";
+	         }
+	         else
+	         {
+	             alt = "";
+	         }
+	         
+	         count++;
+	        area ad = iterator.next();
+	       //  物流人员工号 	姓名 	电话 	所持设备 	所在区域 	修改 	删除
+	         String areaId = ad.getAreaId();
+	         String areaName=ad.getAreaName().trim().toString();
+	         
+	         String staffid=ad.getStaffId();
+	         String  lon1=ad.getLon1();
+	         String  lon2=ad.getLon2();   
+	         String  lon3=ad.getLon3();
+	         String  lon4=ad.getLon4();
+	         String  lon5=ad.getLon5();
+	         String  lon6=ad.getLon6();
+	         String  lon7=ad.getLon7();
+	         String  lon8=ad.getLon8();
+	         String  lan1=ad.getLan1();
+	         String  lan2=ad.getLan2();   
+	         String  lan3=ad.getLan3();
+	         String  lan4=ad.getLan4();
+	         String  lan5=ad.getLan5();
+	         String  lan6=ad.getLan6();
+	         String  lan7=ad.getLan7();
+	         String  lan8=ad.getLan8();
+	         String ltlon=ad.getLTlon();
+	         String ltlan=ad.getLTlan();
+	         String lblon=ad.getLBlon();
+	         String lblan=ad.getLBlan();
+	         String rtlon=ad.getRTlon();
+	         String rtlan=ad.getRTlan();
+	         String rblon=ad.getRBlon();
+	         String rblan=ad.getRBlan();
+	         String createTime=ad.getCreateTime();
+	         System.out.println("lan7"+lan7);
+	         String tr = "<tr style=\"font-size: 12px;\">"
+	        	 + "<td class=\"" + alt + "\">" + areaId + "</td> " + "<td class=\"" + alt + "\">"
+	        	 + areaName + "</td> " + "<td class=\"" + alt + "\">" + staffid + "</td> " + "<td class=\"" + alt + "\">"
+	        	 + createTime + "</td> " + "<td class=\"" 
+	        	 + alt + "\">" + "<input type='button' value='查看详情' onclick=\"javascript:checkDatai('" + areaName + "','" + areaId + "','" + staffid + "'," + lon1 + "," + lon2 + "," + lon3 + "," + lon4 + "," + lon5 + "," + lon6 + "," + lon7 + "," + lon8 + "" +
+	        	 		"," + lan1 + "," + lan2 + "," + lan3 + "," + lan4 + "," + lan5 + "," + lan6 + "," + lan7 + "," + lan8 +
+	        	 		"," + lblon + "," + lblan + "," + rtlon + "," + rtlan + ");\" >" + "</td> " + "<td class=\"" 
+	        	 + alt + "\">" + "<input type='button' value='删除' onclick='javascript:deleteInfo("  +areaId  + " );' >"+ "</td> "  + "</tr>";
+	         sb.append(tr);
+	     }
+	     logger.info("目标响应值：" + sb.toString());
+	     return page.toXml(sb.toString());
+	 }
+	}

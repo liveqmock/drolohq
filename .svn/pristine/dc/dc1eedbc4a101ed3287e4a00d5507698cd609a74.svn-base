@@ -1,0 +1,38 @@
+package ouc.drolo.action.user;
+
+import java.io.IOException;
+import java.sql.SQLException;
+
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import ouc.drolo.dao.OrderDao;
+import wph.iframework.Action;
+import wph.iframework.dao.db.Database;
+import wph.iframework.dao.db.SqlServer;
+
+public class UserFindOrderAction extends Action{
+
+	@Override
+	public String execute(HttpServletRequest request,
+			HttpServletResponse response) throws ServletException, IOException {
+		String result = "0";
+		int userId = Integer.parseInt(request.getParameter("userId"));
+		try {
+			Database dbDatabase =  new SqlServer();
+			dbDatabase.setAutoCommit(false);
+			OrderDao orderDao = new OrderDao(dbDatabase);
+			result = orderDao.findOrder(userId);
+			dbDatabase.commit();
+			dbDatabase.close();
+			System.out.println(" 用户   查询订单结果      "+result);
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return result;  
+	}
+	
+}

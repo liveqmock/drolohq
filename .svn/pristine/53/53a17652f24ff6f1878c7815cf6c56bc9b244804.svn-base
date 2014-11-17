@@ -1,0 +1,19 @@
+package ouc.drolo.webservice;
+
+
+public class WebMsg {
+
+	public static void main(String[] args) {
+		String loginName = "duola";
+		String password = "cf9fd25dae95da9d7ec5417c2704cbcb";
+		String mobile = "15726275272";
+		String content ="hello,WebService!";
+		
+		WebService webService = new WebService();
+		WebServiceSoap wss = webService.getWebServiceSoap();
+		String back = wss.send(loginName, password, "", mobile, content, "1");
+//		String charge = wss.getCharge(loginName, password);  cf9fd25dae95da9d7ec5417c2704cbcb
+		System.out.println(back);
+	}
+
+}

@@ -1,0 +1,77 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+	pageEncoding="UTF-8"%>
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<script type="text/javascript">
+	var _type = 1;//管理员登陆
+</script>
+
+<head>
+<meta name="author" content="zyn">
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<link rel="stylesheet" href="css/basestyle.css" />
+<script type="text/javascript" src="js/jquery-1.2.6.min.js"></script>
+<script type="text/javascript" src="js/login/login.js"></script>
+<script type="text/javascript">
+
+
+
+	
+</script>
+<title>监控中心登陆</title>
+</head>
+<body>
+	<center>
+		<div style="margin-top: 100px;">
+			<TABLE cellSpacing=0 cellPadding=0 background="images/kuai002.gif"
+				border=0>
+				<TBODY>
+					<TR>
+						<TD><IMG height=31 src="images/kuai001.gif" width=5></TD>
+						<TD class="white14_16b"
+							style="PADDING-RIGHT: 1px; PADDING-LEFT: 1px; PADDING-BOTTOM: 0px; PADDING-TOP: 3px"><font
+							color="white"><strong>朵拉洗衣订单管理系统</strong></font></TD>
+						<TD><IMG height=31 src="images/kuai003.gif" width=6></TD>
+						<TD><IMG height="31" src="images/kuai004.gif" width=400></TD>
+					</TR>
+				</TBODY>
+			</TABLE>
+			<div id="log">
+				<form id="adminlog" name="adminlog">
+					<table align="center" style="margin-top: 50px;">
+
+						<tr>
+							<td>用户名:</td>
+							<td><input type="text" name="username" id="username" onkeypress="EnterPress(event);" ></td>
+						</tr>
+
+						<tr>
+							<td>密 码:</td>
+							<td><input type="password" name="password" id="password"
+								style="width: 153px;" onkeypress="EnterPress_login(event);" ></td>
+						</tr>
+						<tr>
+							<td>身份:</td>
+							<td>
+								<select id="shenfen" name="shenfen">
+									<option selected="" value="1">&nbsp;客&nbsp;服</option>
+									<option value="2">管理员</option>
+								</select>
+							</td>
+						</tr>
+						<tr>
+							<td colspan="2" align="center"><input type="button" name="btnadd" id="btnadd"
+								value="登录" OnClick="adminLogin();">&nbsp;&nbsp;
+								&nbsp; <input type="reset"
+								name="cancel" value="重置"></td>
+						</tr>
+					</table>
+				</form>
+				
+			</div>
+		</div>
+	</center>
+</body>
+</html>

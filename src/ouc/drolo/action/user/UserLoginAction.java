@@ -1,0 +1,49 @@
+package ouc.drolo.action.user;
+
+import java.io.IOException;
+
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import ouc.drolo.dao.UserDao;
+import ouc.drolo.domain.User;
+import wph.iframework.Action;
+import wph.iframework.dao.db.Database;
+import wph.iframework.dao.db.SqlServer;
+
+/**
+ * 用户  登录  
+ * 		param: 手机号、密码
+ * @author jeep
+ *
+ */
+public class UserLoginAction extends Action{
+
+	@Override
+	public String execute(HttpServletRequest request,
+			HttpServletResponse response) throws ServletException, IOException {
+		String flag = "0";
+		String phone = request.getParameter("phone");
+		String password = request.getParameter("password");
+		
+		User user = new User();
+		user.setPhone(phone);
+		user.setPassword(password);
+		
+		Database db = null;
+		try {
+			db = new SqlServer();
+			UserDao ud = new UserDao(db);
+			flag = ud.login(user);
+			
+			db.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}finally{
+			db.close();
+		}
+		return flag;
+	}
+
+}

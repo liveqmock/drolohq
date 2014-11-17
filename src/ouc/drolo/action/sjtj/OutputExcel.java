@@ -1,0 +1,186 @@
+package ouc.drolo.action.sjtj;
+
+import java.io.BufferedOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.util.List;
+
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.apache.poi.hssf.usermodel.HSSFCell;
+import org.apache.poi.hssf.usermodel.HSSFCellStyle;
+import org.apache.poi.hssf.usermodel.HSSFFont;
+import org.apache.poi.hssf.usermodel.HSSFRichTextString;
+import org.apache.poi.hssf.usermodel.HSSFRow;
+import org.apache.poi.hssf.usermodel.HSSFSheet;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+
+public class OutputExcel extends HttpServlet {
+	private static Log logger = LogFactory.getLog(OutputExcel.class);
+	private static final long serialVersionUID = 1L;
+	
+	protected void doGet(HttpServletRequest request, HttpServletResponse response) 
+			throws ServletException, IOException {
+		this.doPost(request, response);  
+	}
+
+	protected void doPost(HttpServletRequest request, HttpServletResponse response) 
+			throws ServletException, IOException {
+		  HttpSession session = request.getSession();  
+		  List<DataBean> dlist = (List<DataBean>) session.getAttribute("dlist");
+		  String datefrom = (String) session.getAttribute("datefrom");
+		  String dateto = (String) session.getAttribute("dateto");
+		  String kfid = (String) session.getAttribute("kfid");
+		  String wlid = (String) session.getAttribute("wlid");
+		  
+		
+		  logger.debug(datefrom +"      " + dateto);
+		 	for(DataBean db : dlist){
+		 		logger.debug(db.getWlid() +"  : " + db.getPjzl());
+		 	}
+		 	
+	
+	        String fileName = "数据统计.xls";  
+	        fileName = new String(fileName.getBytes("GBK"), "iso8859-1");  
+	        
+	        response.reset();  
+	        response.setHeader("Content-Disposition", "attachment;filename=" + fileName);// 指定下载的文件名   
+	        response.setContentType("application/vnd.ms-excel");  
+	        response.setHeader("Pragma", "no-cache");  
+	        response.setHeader("Cache-Control", "no-cache");  
+	        response.setDateHeader("Expires", 0);  
+	        OutputStream output = response.getOutputStream();  
+	        BufferedOutputStream bufferedOutPut = new BufferedOutputStream(output);  
+	  
+	        // 定义单元格报头   
+	        String worksheetTitle = "时间范围: "+datefrom+" - "+dateto;  
+	        
+	        HSSFWorkbook wb = new HSSFWorkbook();  
+	        
+	        // 创建单元格样式   
+	        HSSFCellStyle cellStyleTitle = wb.createCellStyle();  
+	        cellStyleTitle.setAlignment(HSSFCellStyle.ALIGN_CENTER);  
+	        cellStyleTitle.setVerticalAlignment(HSSFCellStyle.VERTICAL_CENTER);  
+	        cellStyleTitle.setWrapText(false);
+	        
+	        // ------------------------------------------------------------------   
+	        
+	        HSSFCellStyle cellStyle = wb.createCellStyle();  
+	        cellStyle.setAlignment(HSSFCellStyle.ALIGN_CENTER);  
+	        cellStyle.setVerticalAlignment(HSSFCellStyle.VERTICAL_CENTER);  
+	        cellStyle.setWrapText(false);  
+	        // ------------------------------------------------------------------   
+	        
+	        // 设置单元格字体   
+	        HSSFFont font = wb.createFont();  
+	        font.setBoldweight(HSSFFont.BOLDWEIGHT_BOLD);  
+	        font.setFontName("宋体");  
+	        font.setFontHeight((short) 200);  
+	        cellStyleTitle.setFont(font);  
+	  
+	        // 工作表名   
+	        String header[] = {"客服工号","物流工号","服务区域","用户下单量","取衣单量","取衣数量","取衣总金额","送衣单量","拒单数量",
+	        			"用户评价总量","洗衣差评总量","洗衣中评总量","物流差评总量","物流中评总量"};
+	  
+	        HSSFSheet sheet = wb.createSheet(); 
+	        
+	        for(int i=0;i<header.length;i++){
+	        	sheet.setColumnWidth(i, 3500);
+	        }
+	        	
+	        ExportExcel exportExcel = new ExportExcel(wb, sheet);  
+	        exportExcel.createNormalHead(worksheetTitle, 13);  
+	        // 定义第一行   
+	        HSSFRow row1 = sheet.createRow(1);  
+	  
+	        for(int i=0;i<header.length;i++){
+	        	HSSFCell cell1 = row1.createCell(i);  
+		        cell1.setCellStyle(cellStyleTitle);  
+		        cell1.setCellValue(new HSSFRichTextString(header[i]));  
+	        }
+	         
+	        //---------------定义第二行   
+	        HSSFRow row = sheet.createRow(2);  
+	        
+	        HSSFCell cell = row.createCell(1);  
+	        DataBean bean = new DataBean();  
+	        
+	        for (int i = 0; i < dlist.size(); i++) {  
+	            bean = dlist.get(i);  
+	            row = sheet.createRow(i + 2); // 显示数据 
+	  
+	            cell = row.createCell(0);  
+	            cell.setCellStyle(cellStyle);  
+	            cell.setCellValue(new HSSFRichTextString(bean.getKfid()+""));  
+	              
+	            cell = row.createCell(1);  
+	            cell.setCellStyle(cellStyle);  
+	            cell.setCellValue(new HSSFRichTextString(bean.getWlid()));  
+	              
+	            cell = row.createCell(2);  
+	            cell.setCellStyle(cellStyle);  
+	            cell.setCellValue(new HSSFRichTextString(bean.getFwArea() + ""));  
+	              
+	            cell = row.createCell(3);  
+	            cell.setCellStyle(cellStyle);  
+	            cell.setCellValue(new HSSFRichTextString(bean.getYhdl() + ""));  
+	              
+	            cell = row.createCell(4);  
+	            cell.setCellStyle(cellStyle);  
+	            cell.setCellValue(new HSSFRichTextString(bean.getQydl()+"")); 
+	              
+	            cell = row.createCell(5);  
+	            cell.setCellStyle(cellStyle);  
+	            cell.setCellValue(new HSSFRichTextString(bean.getQysl()+"")); 
+	            
+	            cell = row.createCell(6);  
+	            cell.setCellStyle(cellStyle);  
+	            cell.setCellValue(new HSSFRichTextString(bean.getZje()+"")); 
+	            
+	            cell = row.createCell(7);  
+	            cell.setCellStyle(cellStyle);  
+	            cell.setCellValue(new HSSFRichTextString(bean.getSydl()+"")); 
+	            
+	            cell = row.createCell(8);  
+	            cell.setCellStyle(cellStyle);  
+	            cell.setCellValue(new HSSFRichTextString(bean.getJdsl()+"")); 
+	            
+	            cell = row.createCell(9);  
+	            cell.setCellStyle(cellStyle);  
+	            cell.setCellValue(new HSSFRichTextString(bean.getPjzl()+"")); 
+	            
+	            cell = row.createCell(10);  
+	            cell.setCellStyle(cellStyle);  
+	            cell.setCellValue(new HSSFRichTextString(bean.getXycpzl()+"")); 
+	            
+	            cell = row.createCell(11);  
+	            cell.setCellStyle(cellStyle);  
+	            cell.setCellValue(new HSSFRichTextString(bean.getXyzpzl()+"")); 
+	            
+	            cell = row.createCell(12);  
+	            cell.setCellStyle(cellStyle);  
+	            cell.setCellValue(new HSSFRichTextString(bean.getWlcpzl()+"")); 
+	            
+	            cell = row.createCell(13);  
+	            cell.setCellStyle(cellStyle);  
+	            cell.setCellValue(new HSSFRichTextString(bean.getWlzpzl()+"")); 
+	        }  
+	        try {  
+	            bufferedOutPut.flush();  
+	            wb.write(bufferedOutPut);  
+	            bufferedOutPut.close();  
+	        } catch (IOException e) {  
+	            e.printStackTrace();  
+	        } finally {  
+	            dlist.clear();    
+	        }
+
+	}
+
+}

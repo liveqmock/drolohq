@@ -1,0 +1,26 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" >
+ <head>
+<meta name = "viewport" content = "initial-scale = 0.8"> 
+<title>
+</title>
+     
+</head>
+<body>
+ <table style="width: 294px; height: 248px">
+ <img style="position:absolute; top:100px; left:30px;display:block;" src="images/logo_su.png" onclick="install();" />
+ <span style="float:left;">download</span>
+</table>
+</body>
+
+<script language='JavaScript'>
+       install = function() 
+       {
+    	 //  location.href = 'itms-services://?action=download-manifest&url=http://211.64.154.159:8080/drolo/manifest.plist';
+    	   location.href = 'itms-services://?action=download-manifest&url=http://www.xiyiapp.com/drolo/manifest.plist';
+        }
+    </script>
+    
+</html>
+

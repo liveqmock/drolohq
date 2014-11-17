@@ -1,0 +1,142 @@
+package ouc.drolo.action.sjtj;
+
+/**
+ *  数据统计 
+ * @author jeep
+ *
+ */
+public class DataBean {
+
+	private String kfid ;
+	private String wlid ;
+	private String fwArea;
+	private int yhdl ;
+	private int qydl ;
+	private int qysl;
+	private float zje ;
+	private int sydl ;
+	private int jdsl;
+	private int pjzl ;
+	private int xycpzl; 
+	private int xyzpzl;
+	private int wlcpzl;
+	private int wlzpzl ;
+	
+	public String getKfid() {
+		return kfid;
+	}
+	public void setKfid(String kfid) {
+		this.kfid = kfid;
+	}
+	public String getWlid() {
+		return wlid;
+	}
+	public void setWlid(String wlid) {
+		this.wlid = wlid;
+	}
+	public String getFwArea() {
+		return fwArea;
+	}
+	public void setFwArea(String fwArea) {
+		this.fwArea = fwArea;
+	}
+	public int getYhdl() {
+		return yhdl;
+	}
+	public void setYhdl(int yhdl) {
+		this.yhdl = yhdl;
+	}
+	public int getQydl() {
+		return qydl;
+	}
+	public void setQydl(int qydl) {
+		this.qydl = qydl;
+	}
+	public int getQysl() {
+		return qysl;
+	}
+	public void setQysl(int qysl) {
+		this.qysl = qysl;
+	}
+	public float getZje() {
+		return zje;
+	}
+	public void setZje(float zje) {
+		this.zje = zje;
+	}
+	public int getSydl() {
+		return sydl;
+	}
+	public void setSydl(int sydl) {
+		this.sydl = sydl;
+	}
+	public int getJdsl() {
+		return jdsl;
+	}
+	public void setJdsl(int jdsl) {
+		this.jdsl = jdsl;
+	}
+	public int getPjzl() {
+		return pjzl;
+	}
+	public void setPjzl(int pjzl) {
+		this.pjzl = pjzl;
+	}
+	public int getXycpzl() {
+		return xycpzl;
+	}
+	public void setXycpzl(int xycpzl) {
+		this.xycpzl = xycpzl;
+	}
+	public int getXyzpzl() {
+		return xyzpzl;
+	}
+	public void setXyzpzl(int xyzpzl) {
+		this.xyzpzl = xyzpzl;
+	}
+	public int getWlcpzl() {
+		return wlcpzl;
+	}
+	public void setWlcpzl(int wlcpzl) {
+		this.wlcpzl = wlcpzl;
+	}
+	public int getWlzpzl() {
+		return wlzpzl;
+	}
+	public void setWlzpzl(int wlzpzl) {
+		this.wlzpzl = wlzpzl;
+	}
+	
+	public DataBean() {
+		
+	}
+	
+	public DataBean(String kfid, String wlid, String fwArea, int yhdl,
+			int qydl, int qysl, float zje, int sydl, int jdsl, int pjzl,
+			int xycpzl, int xyzpzl, int wlcpzl, int wlzpzl) {
+		super();
+		this.kfid = kfid;
+		this.wlid = wlid;
+		this.fwArea = fwArea;
+		this.yhdl = yhdl;
+		this.qydl = qydl;
+		this.qysl = qysl;
+		this.zje = zje;
+		this.sydl = sydl;
+		this.jdsl = jdsl;
+		this.pjzl = pjzl;
+		this.xycpzl = xycpzl;
+		this.xyzpzl = xyzpzl;
+		this.wlcpzl = wlcpzl;
+		this.wlzpzl = wlzpzl;
+	}
+	@Override
+	public String toString() {
+		return "DataBean [kfid=" + kfid + ", wlid=" + wlid + ", fwArea="
+				+ fwArea + ", yhdl=" + yhdl + ", qydl=" + qydl + ", qysl="
+				+ qysl + ", zje=" + zje + ", sydl=" + sydl + ", jdsl=" + jdsl
+				+ ", pjzl=" + pjzl + ", xycpzl=" + xycpzl + ", xyzpzl="
+				+ xyzpzl + ", wlcpzl=" + wlcpzl + ", wlzpzl=" + wlzpzl + "]";
+	}
+	
+}

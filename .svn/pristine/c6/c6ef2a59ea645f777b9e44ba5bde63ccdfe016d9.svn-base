@@ -1,0 +1,12 @@
+package ouc.drolo.util.order;
+
+
+public class TestOrderId {
+
+	public static void main(String[] args) throws InterruptedException {
+		for(int i=0;i<10;i++){
+			SerialNumber serial = new FileEveryDaySerialNumber(4, "a.dat");
+			System.out.println(serial.getSerialNumber());
+		}
+    }
+}

@@ -1,0 +1,22 @@
+
+--------  用户联系人   ----------	
+
+	create table _contact(
+		contact_id int not null identity(1,1),
+		contact_name nvarchar(50) null,
+		contact_tel nvarchar(20) null ,
+		user_id int null
+		primary key(contact_id)
+	)
+---------    end     ---------	
+
+INSERT INTO _contact(user_id,contact_name,contact_tel)VALUES('44','jeep','15726275272') 
+
+
+
+-------     14/07/07   修改  ----------------
+ALTER TABLE  _users_address DROP CONSTRAINT fk_address_users
+
+alter table  _users alter column password nvarchar(50) null;
+
+----------     end      -------------------

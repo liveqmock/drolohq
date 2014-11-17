@@ -1,0 +1,80 @@
+package ouc.drolo.sms;
+
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import java.text.DateFormat;
+import java.util.Date;
+
+public class SendMessage {
+	/**
+	 * @param args
+	 */
+	public static void main(String[] args) {
+		// 提交的url地址，这个要修改成部署的对应的接口的url
+	//	String uri = "http://userinterface.vcomcn.com/Opration.aspx";
+		String content = "尊敬的用户，您本次的短信验证码为 :1234";
+		String phone = "15726275272";
+		// 提交的数据
+		String pstContent = createSubmitXml(phone, content);
+
+		System.out.print(Http.post(pstContent));
+	}
+
+	public static String MD5(String encryptContent) {
+		String result = "";
+		try {
+			MessageDigest md = MessageDigest.getInstance("MD5");
+			md.update(encryptContent.getBytes());
+			byte b[] = md.digest();
+			int i;
+			StringBuffer buf = new StringBuffer("");
+			for (int offset = 0; offset < b.length; offset++) {
+				i = b[offset];
+				if (i < 0)
+					i += 256;
+				if (i < 16)
+					buf.append("0");
+				buf.append(Integer.toHexString(i));
+			}
+
+			result = buf.toString().toUpperCase();
+
+		} catch (NoSuchAlgorithmException e) {
+
+		}
+		return result;
+	}
+
+	// 密码采用md5加密
+	public static String createSubmitXml(String phone, String content) {
+		Date now = new Date();
+		// 2008-6-16 20:54:53
+		DateFormat dtFormat = DateFormat.getDateInstance();
+		String sendtime = dtFormat.format(now);
+
+		StringBuffer sp = new StringBuffer();
+		sp.append(String
+				.format("<Group Login_Name=\"%s\" Login_Pwd=\"%s\" InterFaceID=\"0\" OpKind=\"0\">",
+						"duola", MD5("duola123")));
+		sp.append(String.format("<E_Time>%s</E_Time>", sendtime));
+		sp.append("<Item>");
+
+		sp.append("<Task>");
+		sp.append("<Recive_Phone_Number>" + phone + "</Recive_Phone_Number>");
+		sp.append("<Content><![CDATA["+content+"]]></Content>");
+		sp.append("<Search_ID>1</Search_ID>");
+		sp.append("</Task>");
+
+		/*
+		 * sp.append("<Task>");
+		 * sp.append("<Recive_Phone_Number>18059135112</Recive_Phone_Number>");
+		 * sp.append("<Content><![CDATA[测试短信1002]]></Content>");
+		 * sp.append("<Search_ID>1</Search_ID>"); sp.append("</Task>");
+		 */
+
+		sp.append("</Item>");
+		sp.append("</Group>");
+
+		return sp.toString();
+	}
+}

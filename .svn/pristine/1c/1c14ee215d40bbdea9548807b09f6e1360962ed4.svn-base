@@ -1,0 +1,55 @@
+package ouc.drolo.action.orperator;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import ouc.drolo.dao.OperatorDao;
+
+import wph.iframework.Action;
+import wph.iframework.dao.db.Database;
+
+public class webLogin extends Action {
+
+
+
+    private String username;
+    private String password;
+    
+    @Override
+    public String execute(HttpServletRequest request, HttpServletResponse response)
+    {
+        Database db = getDatabase();
+       // System.out.println("aa");
+       OperatorDao oDao = new  OperatorDao(db);
+     
+        int oid = oDao.login(username, password);
+        
+       System.out.println("oid:"+oid);
+        if (oid > 0)
+        {
+            request.getSession().setAttribute("oid", oid);
+            request.getSession().setAttribute("name", username);
+        }
+        return "" + oid;
+    }
+    
+    public String getUsername()
+    {
+        return username;
+    }
+    
+    public void setUsername(String username)
+    {
+        this.username = username;
+    }
+    
+    public String getPassword()
+    {
+        return password;
+    }
+    
+    public void setPassword(String password)
+    {
+        this.password = password;
+    }
+}

@@ -1,0 +1,60 @@
+package ouc.drolo.action.staff;
+
+import java.io.IOException;
+import java.sql.SQLException;
+
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import ouc.drolo.action.diaodu.Dispatcher;
+import ouc.drolo.dao.OrderDao;
+import ouc.drolo.domain.Order;
+import wph.iframework.Action;
+import wph.iframework.dao.db.Database;
+import wph.iframework.dao.db.SqlServer;
+
+/**
+ * 物流人员  接单 
+ * @author jeep
+ *
+ */
+public class StaffAcceptOrderAction extends Action {
+
+	@Override
+	public String execute(HttpServletRequest request,
+			HttpServletResponse response) throws ServletException, IOException {
+		String flag = "-1" ;
+		int isOrder = -1 ;
+		
+		Database db =null ;
+		String orderId = request.getParameter("orderId");
+		String staffId = request.getParameter("staffId");
+		Dispatcher dispatcher = Dispatcher.getInstance();
+		try {
+			db = new SqlServer();
+			db.setAutoCommit(false);
+			
+			OrderDao od = new OrderDao(db);
+			
+			isOrder =od.isStaffOrder(staffId, orderId);
+			if(isOrder == 1){
+		Order order=dispatcher.getOrder(orderId);
+			order.cancel();
+		  //  dispatcher.getOrders().remove(staffId);
+				flag = od.acceptOrder(staffId,orderId);
+			//	System.out.println("物流人员工号: "+staffId+"     接受的订单号 : " + orderId); 
+			}
+			
+			db.commit();
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}finally{
+			db.close();
+		}
+		return flag;
+	}
+
+}

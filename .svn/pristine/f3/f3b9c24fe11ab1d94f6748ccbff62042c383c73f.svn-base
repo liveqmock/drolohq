@@ -1,0 +1,57 @@
+package ouc.drolo.action.user;
+
+import java.io.IOException;
+import java.sql.SQLException;
+
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
+import ouc.drolo.dao.ContactDao;
+import wph.iframework.Action;
+import wph.iframework.dao.db.Database;
+import wph.iframework.dao.db.SqlServer;
+
+/** 14/07/07
+ *  用户 添加 联系人
+ * @author jeep
+ *
+ */
+public class UserAddContactAction extends Action{
+	private static Log logger = LogFactory.getLog(UserAddContactAction.class);
+	
+	@Override
+	public String execute(HttpServletRequest request,
+			HttpServletResponse response) throws ServletException, IOException {
+		
+		String uid = request.getParameter("uid");
+		String cName = request.getParameter("cName");
+		cName = new String(cName.getBytes("ISO-8859-1"), "UTF-8");
+		String cTel = request.getParameter("cTel");
+		
+		logger.debug("用户编号："+uid+" 联系人姓名："+cName+"  联系人电话："+cTel); 
+		
+		Database db=null;
+		String str="-1";
+
+			try {
+				 db=new SqlServer();
+				 ContactDao cDao = new  ContactDao(db);
+				 str = cDao.addContact(uid, cName, cTel);
+	
+			} catch (ClassNotFoundException e) {
+				e.printStackTrace();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}finally{
+				if(db!=null){
+					db.close();
+				}
+			}
+		return str; 
+	}
+		
+}

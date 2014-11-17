@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE actions PUBLIC "-//WPH-IF" "if.dtd">
+<if>
+	<package namespace="/">
+	
+		<!-- staff login  -->
+		<action name="staffLogin" class="ouc.drolo.action.staff.StaffLoginAction"></action>
+		
+		<!-- 物流人员 退出登陆   -->
+		<action name="sLogout" class="ouc.drolo.action.staff.StaffLogoutAction"></action>
+		
+		<!-- 物流人员   更改 GPS   -->
+		<action name="sChangeGps" class="ouc.drolo.action.staff.StaffChangeGpsAction"></action>
+		
+		
+		<!-- 物流人员   生成订单 -->
+		<action name="sOrderGenerate" class="ouc.drolo.action.staff.StaffOrderGenerateAction"></action>
+		
+		<!-- Staff check apk_version  -->
+		<action name="staffUpdateVersion" class="ouc.drolo.action.staff.StaffUpdateVersionAction"></action>
+		<!-- Staff 未处理订单 -->
+		<action name="staffFindUnOrder" class="ouc.drolo.action.staff.StaffFindOrderAction"></action> 
+		
+		 <!-- Staff 接单 -->
+		<action name="sAcceptOrder" class="ouc.drolo.action.staff.StaffAcceptOrderAction"></action> 
+		 <!-- Staff 根据工号查询 已接的订单 -->
+		<action name="sFindOrderByStaffId" class="ouc.drolo.action.staff.StaffFindOrderByStaffIdAction"></action>
+		
+		<!-- Staff查询衣物类别-->
+		<action name="sFindClothesCat" class="ouc.drolo.action.staff.StaffFindClothesCatAction"></action>
+		<!-- Staff 根据衣物类别查询衣物名称-->
+		<action name="sFindClothesName" class="ouc.drolo.action.staff.StaffFindClothesNameAction"></action> 
+		
+		
+		<!-- Staff 根据    衣物名称  查询价格-->
+		<action name="sFindClothesPrice" class="ouc.drolo.action.staff.StaffFindClothesPriceAction"></action> 
+		
+		<!-- Staff 存入一件衣服-->
+		<action name="staffSaveClothes" class="ouc.drolo.action.staff.StaffSaveClothesAction"></action> 
+		
+		<!-- Staff 删除一件衣服-->
+		<action name="sDelClothes" class="ouc.drolo.action.staff.StaffDeleteClothesAction"></action> 
+		
+		
+		<!-- Staff 查询订单下所有衣服-->
+		<action name="staffFindAllClothes" class="ouc.drolo.action.staff.StaffFindAllClothesAction"></action> 
+		
+		<!-- 物流人员    收款  -->
+		<action name="sPay" class="ouc.drolo.action.staff.StaffPayAction"></action> 
+		
+		<!-- 物流人员   充值卡   收款  -->
+		<action name="sPayCZK" class="ouc.drolo.action.staff.StaffPayCZKAction"></action>
+		
+		<!-- 物流人员拒单-->
+		<action name="sRefuse" class="ouc.drolo.action.staff.StaffRefuseOrderAction"></action> 
+		
+		
+		<!-- 物流人员  根据 用户电话 查询 用户所有 会员卡卡号-->
+		<action name="sFindCzk" class="ouc.drolo.action.staff.StaffFindCzkAction"></action> 
+		
+		<!-- 物流人员  通过选择  查询 充值卡卡号 查询 余额-->
+		<action name="SCzkBalance" class="ouc.drolo.action.staff.SFindCzkBalanceAction"></action>
+		
+		<!-- 物流人员  根据  充值卡卡号 查询 余额-->
+		<action name="sFindCzkBalance" class="ouc.drolo.action.staff.StaffFindCzkBalanceAction"></action> 
+		
+		<!-- 物流人员  根据  物流人员 工号 查询  送衣 订单-->
+		<action name="sFindSendOrder" class="ouc.drolo.action.staff.StaffSendOrderAction"></action> 
+
+		<!-- 物流人员  根据   流水号   查询  送衣 订单 详情 -->
+		<action name="sFindSendOrderXq" class="ouc.drolo.action.staff.StaffSendOrderXqAction"></action> 
+		
+		
+		<!-- 物流人员    查询     送衣  订单 记录  -->
+		<action name="sAllSendOrder" class="ouc.drolo.action.staff.StaffFindAllSendOrderAction"></action> 
+		
+		<!-- 物流人员    查询   取衣  订单 记录  -->
+		<action name="sAllTakeOrder" class="ouc.drolo.action.staff.StaffFindAllTakeOrderAction"></action>
+		
+		
+		
+		<!-- 物流人员    送衣 完成 -->
+		<action name="sSendFinish" class="ouc.drolo.action.staff.StaffSendFinishAction"></action>
+		
+		
+		<!-- 物流人员    作废 订单   0612-->
+		<action name="szfOrder" class="ouc.drolo.action.staff.SZfOrderAction"></action>
+		
+		
+		<!-- 物流人员   修改地址   0805-->
+		<action name="supdateAdd" class="ouc.drolo.action.staff.StaffUpdateOrderAddAction"></action>
+		
+		
+	</package>
+</if>

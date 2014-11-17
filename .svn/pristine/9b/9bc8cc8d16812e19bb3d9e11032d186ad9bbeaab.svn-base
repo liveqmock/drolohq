@@ -1,0 +1,1434 @@
+package ouc.drolo.dao;
+
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+import org.json.JSONStringer;
+
+import ouc.drolo.domain.Order;
+import ouc.drolo.domain.Pay;
+import ouc.drolo.domain.Staff;
+import ouc.drolo.util.CloseResource;
+import ouc.drolo.util.Md5Utils;
+import wph.iframework.dao.Dao;
+import wph.iframework.dao.db.Database;
+import wph.iframework.dao.db.Page;
+import wph.iframework.dao.db.ResultSetCallback;
+
+public class OrderDao extends Dao{
+
+	public OrderDao(Database db) {
+		super(db);
+	}
+
+	public int addonestaffInfo(String name,String pswd,String phone,String staffid,String equipNum,String ereaNun){
+		int flag;
+		String pw=Md5Utils.encode(pswd);
+		String sqlString="insert into _staff(name,password,tel,staffId,equipNum,ereaNun) values(?,?,?,?,?,?)";
+	List<Object> itemList=new ArrayList<Object>();
+	itemList.add(name);
+	itemList.add(pw);
+	itemList.add(phone);
+	itemList.add(staffid);
+	itemList.add(equipNum);
+	itemList.add(ereaNun);
+	flag=db.executeUpdate(sqlString, itemList);
+		
+		return flag;
+	}
+	/**
+	 * 按条件获取订单
+	 */
+	public boolean orderByquest(final Page<Order> page,int leibie,String questcontext  ){
+		boolean flag=false;
+		if (page == null)
+	    {
+	        throw new NullPointerException();
+	    }
+	    
+	    if (db == null)
+	    {
+	        return false;
+	    }
+	    
+	    final List<Order> list = new ArrayList<Order>();
+	    String sql;
+	    String col;
+	    StringBuffer sb = new StringBuffer();
+
+	    if(leibie==1){
+	    
+	    	sb.append("select id, orderId,takePhone,staffId,status,generateTIme from _order where staffId='"+questcontext+"'");
+	   
+	     sql = sb.toString();
+	   col = "id";
+	    }
+	    
+	    else  if(leibie==2){
+	    	  
+	    	sb.append("select id, orderId,takePhone,staffId,status,generateTIme from _order where takePhone='"+questcontext+"'");
+	  	   sql = sb.toString();
+	
+	  col = "id";
+	    }
+	    else{
+	    	sb.append("select id, orderId,takePhone,staffId,status,generateTIme from _order where orderId='"+questcontext+"'");
+	  	    sql = sb.toString();
+
+	  col = "id";
+	    }
+		
+	    int ret = db.executeQuery(sql, col, page, new ResultSetCallback()
+	    {
+	        @Override
+	        public int handle(ResultSet rs) throws SQLException
+	        {
+	            if (rs == null)
+	            {
+	                return -1;
+	            }
+	            
+	            try
+	            {
+	                while (rs.next())
+	                {Order ad = new Order();
+	                    page.setRowCount(rs.getInt("__count"));
+	                  
+	                 
+	                    ad.setOrderId(rs.getString("orderId"));
+	                    ad.setTakePhone(rs.getString("takePhone"));
+	                    ad.setStaffId(rs.getString("staffId"));
+	                    String sta;
+	                    switch (Integer.parseInt(rs.getString("status"))) {
+						case 30:
+							sta="已下单";
+							break;
+						case 31:
+							sta="已接单";
+							break;
+						case 32:
+							sta="已取衣";
+							break;
+						case 33:
+							sta="洗涤中";
+							break;
+						case 10:
+							sta="物流送衣中";
+							break;
+						case 35:
+							sta="待确认";
+							break;
+						case 36:
+							sta="待评价";
+							break;
+						case 37:
+							sta="已评价";
+							break;
+						case 29:
+							sta="订单已取消";
+							break;
+						default:
+							sta="其他";
+							break;
+						}
+	                    ad.setStatus(sta);
+	                    ad.setGenerateTime(rs.getString("generateTIme"));
+	                    
+	                    list.add(ad);
+	                }
+	            }
+	            catch (SQLException e)
+	            {
+	                e.printStackTrace();
+	                return -1;
+	            }
+	            finally
+	            {
+	                if (rs != null)
+	                {
+	                    try
+	                    {
+	                        rs.close();
+	                    }
+	                    catch (SQLException e)
+	                    {
+	                        e.printStackTrace();
+	                    }
+	                }
+	            }
+	            return 0;
+	        }
+	    });
+	    
+	    if (ret == -1)
+	    {
+	        return false;
+	    }
+	    else
+	    {
+	        page.setDataList(list);
+	        return true;
+	    }
+	}
+	public boolean dingdanorder(final Page<Order> page)
+	{
+	    logger.debug("通过分页bean，获取ad中全部信息" + page + "linker====" + db);
+	    if (page == null)
+	    {
+	        throw new NullPointerException();
+	    }
+	    
+	    if (db == null)
+	    {
+	        return false;
+	    }
+	    
+	    final List<Order> list = new ArrayList<Order>();
+	    
+	    // 构建 SQL
+	    StringBuffer sb = new StringBuffer();
+	    sb.append("select id, orderId,takePhone,staffId,status,generateTIme from _order ");
+	    String sql = sb.toString();
+	   
+	    String col = "generateTIme";
+	    int ret = db.executeQuery1(sql, col, page, new ResultSetCallback()
+	    { 
+	        @Override
+	        public int handle(ResultSet rs) throws SQLException
+	        {
+	            if (rs == null)
+	            {
+	                return -1;
+	            }
+	            
+	            try
+	            {
+	                while (rs.next())
+	                {Order ad = new Order();
+	                    page.setRowCount(rs.getInt("__count"));
+	                  
+	                 
+	                    ad.setOrderId(rs.getString("orderId"));
+	                    ad.setTakePhone(rs.getString("takePhone"));
+	                    ad.setStaffId(rs.getString("staffId"));
+	                    String sta;
+	                    switch (Integer.parseInt(rs.getString("status"))) {
+						case 30:
+							sta="已下单";
+							break;
+						case 31:
+							sta="已接单";
+							break;
+						case 32:
+							sta="已取衣";
+							break;
+						case 33:
+							sta="洗涤中";
+							break;
+						case 10:
+							sta="物流送衣中";
+							break;
+						case 35:
+							sta="待确认";
+							break;
+						case 36:
+							sta="待评价";
+							break;
+						case 37:
+							sta="已评价";
+							break;
+						case 40:
+							sta="拒单";
+							break;
+						default:
+							sta="其他";
+							break;
+						}
+	                    ad.setStatus(sta);
+	                    ad.setGenerateTime(rs.getString("generateTIme"));
+	                    
+	                    list.add(ad);
+	                }
+	            }
+	            catch (SQLException e)
+	            {
+	                e.printStackTrace();
+	                return -1;
+	            }
+	            finally
+	            {
+	                if (rs != null)
+	                {
+	                    try
+	                    {
+	                        rs.close();
+	                    }
+	                    catch (SQLException e)
+	                    {
+	                        e.printStackTrace();
+	                    }
+	                }
+	            }
+	            return 0;
+	        }
+	    });
+	    
+	    if (ret == -1)
+	    {
+	        return false;
+	    }
+	    else
+	    {
+	        page.setDataList(list);
+	        return true;
+	    }
+	}
+	public String getAddres(String oid){
+		String sqlString="select address from _order where orderId='"+oid+"'";
+		ResultSet rSet=db.executeQuery(sqlString);
+		String addr="";
+		try {
+			rSet.next();
+			addr=rSet.getString("address");
+			rSet.close();
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return addr;
+}
+	/**
+	 * 重新分配订单
+	 * @param page
+	 * @return
+	 */
+	public int repaidan(String orderid,String staffid){
+		int flag;
+		String sqlString="update _order set staffId=? ,status=30 where orderId=?";
+		List<Object> itemList=new ArrayList<Object>();
+		itemList.add(staffid);
+		itemList.add(orderid);
+		System.out.println("rrrrd"+orderid);
+		System.out.println("hhhssde"+staffid);
+		flag=db.executeUpdate(sqlString, itemList);
+		return flag;
+	}
+	public boolean Byquest(final Page<Staff> page,int leibie,String questcontext  ){
+		boolean flag=false;
+		if (page == null)
+	    {
+	        throw new NullPointerException();
+	    }
+	    
+	    if (db == null)
+	    {
+	        return false;
+	    }
+	    
+	    final List<Staff> list = new ArrayList<Staff>();
+	    String sql;
+	    String col;
+	  //  System.out.println("d是0"+leibie);
+	    if(leibie==1){
+	    
+	    StringBuffer sb = new StringBuffer();
+	    sb.append("select staffId ,name,tel,equipNum,ereaNun,id from _staff where if_live=1 and name='"+questcontext+"' ");
+	     sql = sb.toString();
+	  //   System.out.println("是1");
+	   col = "id";
+	    }
+	    
+	    else  if(leibie==2){
+	    	  StringBuffer sb = new StringBuffer();
+	  	    sb.append("select staffId ,name,tel,equipNum,ereaNun,id from _staff where if_live=1 and tel='"+questcontext+"' ");
+	  	   sql = sb.toString();
+	  //	 System.out.println("是2");
+	  col = "id";
+	    }
+	    else{
+	    	  StringBuffer sb = new StringBuffer();
+	  	    sb.append("select staffId ,name,tel,equipNum,ereaNun,id from _staff where if_live=1 and staffId='"+questcontext+"' ");
+	  	    sql = sb.toString();
+	  	 // System.out.println("是3");
+	  col = "id";
+	    }
+	   
+		
+		int ret = db.executeQuery(sql, col, page, new ResultSetCallback()
+	    {
+	        @Override
+	        public int handle(ResultSet rs) throws SQLException
+	        {
+	            if (rs == null)
+	            {
+	                return -1;
+	            }
+	            
+	            try
+	            {
+	                while (rs.next())
+	                {Staff ad = new Staff();
+	            
+	                    page.setRowCount(rs.getInt("__count"));
+	                    ad.setName(rs.getString("name"));
+	                    ad.setStaffId(rs.getString("staffId"));
+	                    ad.setTel(rs.getString("tel"));
+	                    ad.setEquipNum(rs.getString("equipNum"));
+	                    ad.setEreaNun(rs.getString("ereaNun"));
+	                    
+	                    list.add(ad);
+	                }
+	            }
+	            catch (SQLException e)
+	            {
+	                e.printStackTrace();
+	                return -1;
+	            }
+	            finally
+	            {
+	                if (rs != null)
+	                {
+	                    try
+	                    {
+	                        rs.close();
+	                    }
+	                    catch (SQLException e)
+	                    {
+	                        e.printStackTrace();
+	                    }
+	                }
+	            }
+	            return 0;
+	        }
+	    });
+	    
+	    if (ret == -1)
+	    {
+	        return false;
+	    }
+	    else
+	    {
+	        page.setDataList(list);
+	        return true;
+	    }
+	
+	
+	}
+	/**
+
+	 * 拒单后更新新的配送人员
+	 */
+	public String updteStaff(String staffid,String orderid){
+		String sqlString="update _order set status= 30,staffId=? where orderId=?";
+		System.out.println("staffid"+staffid);
+		System.out.println("ordrid"+orderid);
+		List<Object> itmeList=new ArrayList<Object>();
+		itmeList.add(staffid);
+		itmeList.add(orderid);
+		System.out.println("rrrrd");
+		int flag=db.executeUpdate(sqlString, itmeList);
+		
+		System.out.println("d444");
+		return flag+"";
+	}
+	
+/**
+ * 删除单个配送员信息
+ */
+	public int deleteInfo(int sid){
+		
+		String sqlString="update  _staff set if_live=0 where staffId='"+sid+"' ";
+	int flag=db.executeUpdate(sqlString);
+	return flag;
+	}
+	/**
+	 * 更新单个配送员信息
+	 */
+	public String updateOneStaffInfo(String name,String phone,String quipNum, String ereaNun ,String staffid){
+		String sql="update _staff set name='"+name+"',tel='"+phone+"',equipNum='"+quipNum+"',ereaNun='"+ereaNun+"' where staffId='"+staffid+"' ";
+		List<Object> item=new ArrayList<Object>();
+		item.add(name);
+		item.add(phone);
+		item.add(quipNum);
+		item.add(ereaNun);
+		item.add(staffid);
+		int flag=db.executeUpdate(sql);
+		System.out.println("sql="+flag);
+		return flag+"";
+	}
+	/**
+	 * 返回单个配送员信息
+	 * 	 
+	 */
+	public String getStafinfo(int sid){
+	
+		String sqlString="select name,tel,equipNum,ereaNun from _staff where staffId=?";
+  List<Object> itemList=new ArrayList<Object>();
+  itemList.add(sid);
+  final  JSONStringer str = new JSONStringer();
+  try {
+	str.array().object();
+} catch (JSONException e1) {
+	e1.printStackTrace();
+}
+  int flag=db.executeQuery(sqlString, itemList, new ResultSetCallback() {
+	
+	public int handle(ResultSet rs) throws SQLException {
+	if(rs.next()){
+		try {
+			
+			str.key("name").value(rs.getString("name")).
+			key("tel").value(rs.getString("tel"))
+			.key("equipNum").value(rs.getString("equipNum"))
+			.key("ereaNun").value(rs.getString("ereaNun")).endObject().endArray();
+		
+		rs.close();
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
+		return 1;
+	}
+	else{
+		try {
+			str.endObject().endArray();
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
+	}
+		return 0;
+	}
+});
+	return str.toString();
+	
+	}
+	/**
+	 * 返回配送员pushId
+	 */
+	
+public String getPushId(int  id){
+	ResultSet rs = null ;
+	String pushId = "" ;
+	String sql="select push_id from _staff where staffId=?";
+	try {
+			PreparedStatement ps = db.getPreparedStatement(sql);
+			ps.setString(1, String.valueOf(id));   
+			rs = ps.executeQuery();
+			if(rs.next()){
+				pushId = rs.getString("push_id") ; 
+			}
+			rs.close();
+			ps.close();
+	} catch (Exception e) {
+		System.out.println(e.getStackTrace());
+		return "-2";
+	}  
+	return pushId ;
+}
+/**
+ * 晚上8点后生成订单
+ */
+public String   shengchengOrder(Order order){
+String large = order.getLarge();
+	
+	String amount = order.getAmount();
+	
+	String takePhone = order.getTakePhone();
+	String note = order.getNote();
+	String address = order.getAddress();
+	String orderId = order.getOrderId();
+	
+	String userId = order.getUserId();
+	String longitude = order.getLongitude();
+	String latitude = order.getLatitude();
+	String userName = order.getUserName();
+	
+	String flag = "-1";
+	try {
+
+			String sql = "INSERT INTO _order(large,amount,address,takePhone,note,orderId,userId,status,generateTime,longitude,latitude,userName) "
+							+ "VALUES (?,?,?,?,?,?,?,45,getdate(),?,?,?)";
+			PreparedStatement ps = db.getPreparedStatement(sql);
+		
+			ps.setString(1, large);
+			ps.setString(2, amount);
+			ps.setString(3,address);
+			ps.setString(4, takePhone);
+			ps.setString(5, note);
+			
+			ps.setString(6, orderId);
+			ps.setString(7, userId);
+			ps.setString(8, longitude); 
+			ps.setString(9, latitude);
+		
+			ps.setString(10, userName);
+
+			int flg = ps.executeUpdate();
+			ps.close();
+			if(flg == 1){
+				flag = orderId;//成功
+				System.err.println("xxxxxxxxxxxxxxxxxxx  " + flg); 
+			}
+			else{
+				flag = "-1";//失败
+			}
+			String  sql2="select status from _order where orderId='"+orderId+"'";
+			ResultSet aResultSet=db.executeQuery(sql2);
+			aResultSet.next();
+			
+			System.out.println("hhhhhhhhhhh"+aResultSet.getString("status"));
+			aResultSet.close();
+	} catch (Exception e) {
+		System.out.println(e.getStackTrace());
+		return "-2";
+	}
+	return flag; 
+}
+/**
+ *返回staffId
+ */
+public String getStaffid(int sid){
+	String sql="select staffId from _staff where id='"+sid+"'";
+	ResultSet rs=db.executeQuery(sql);
+	String id;
+	try {
+		rs.next();
+		 id=rs.getString("staffId");
+		 rs.close();
+	} catch (SQLException e) {
+		// TODO Auto-generated catch block
+		id="";
+		e.printStackTrace();
+	}
+	return id;
+	
+}
+public boolean order(final Page<Staff> page)
+{
+    logger.debug("通过分页bean，获取ad中全部信息" + page + "linker====" + db);
+    if (page == null)
+    {
+        throw new NullPointerException();
+    }
+    
+    if (db == null)
+    {
+        return false;
+    }
+    
+    final List<Staff> list = new ArrayList<Staff>();
+    
+    // 构建 SQL
+    StringBuffer sb = new StringBuffer();
+    sb.append("select staffId ,name,tel,equipNum,ereaNun,id from _staff where if_live=1");
+    String sql = sb.toString();
+   
+    String col = "id";
+    int ret = db.executeQuery(sql, col, page, new ResultSetCallback()
+    {
+        @Override
+        public int handle(ResultSet rs) throws SQLException
+        {
+            if (rs == null)
+            {
+                return -1;
+            }
+            
+            try
+            {
+                while (rs.next())
+                {Staff ad = new Staff();
+                    page.setRowCount(rs.getInt("__count"));
+                  
+                 
+                    ad.setName(rs.getString("name"));
+                    ad.setStaffId(rs.getString("staffId"));
+                    ad.setTel(rs.getString("tel"));
+                    ad.setEquipNum(rs.getString("equipNum"));
+                    ad.setEreaNun(rs.getString("ereaNun"));
+                    
+                    list.add(ad);
+                }
+                rs.close();
+            }
+            catch (SQLException e)
+            {
+                e.printStackTrace();
+                return -1;
+            }
+            finally
+            {
+                if (rs != null)
+                {
+                    try
+                    {
+                        rs.close();
+                    }
+                    catch (SQLException e)
+                    {
+                        e.printStackTrace();
+                    }
+                }
+            }
+            return 0;
+        }
+    });
+    
+    if (ret == -1)
+    {
+        return false;
+    }
+    else
+    {
+        page.setDataList(list);
+        return true;
+    }
+}
+	/**
+	 * 用户生成订单
+	 * @param order
+	 * @return  成功：返回订单号 ； 失败：-1
+	 */
+	public String generateOrder(Order order,int sid) {
+		
+		String large = order.getLarge();
+		String amount = order.getAmount();
+		
+		String takePhone = order.getTakePhone();
+		String note = order.getNote();
+		String address = order.getAddress();
+		String orderId = order.getOrderId();
+		
+		String userId = order.getUserId();
+		String longitude = order.getLongitude();
+		String latitude = order.getLatitude();
+		String userName = order.getUserName();
+		
+		String flag = "-1";
+		try {
+
+				String sql = "INSERT INTO _order(large,amount,address,takePhone,note,orderId,userId,status,generateTime,longitude,latitude,staffId,userName) "
+								+ "VALUES (?,?,?,?,?,?,?,30,getdate(),?,?,?,?)";
+				PreparedStatement ps = db.getPreparedStatement(sql);
+			
+				ps.setString(1, large);
+				ps.setString(2, amount);
+				ps.setString(3,address);
+				ps.setString(4, takePhone);
+				ps.setString(5, note);
+				
+				ps.setString(6, orderId);
+				ps.setString(7, userId);
+				ps.setString(8, longitude); 
+				ps.setString(9, latitude);
+				ps.setString(10,sid+"");
+				ps.setString(11, userName);
+
+				System.out.println("sid"+sid);
+				int flg = ps.executeUpdate();
+				
+				ps.close();
+				if(flg == 1){
+					flag = orderId;//成功
+				}
+				else{
+					flag = "-1";//失败
+				}
+		} catch (Exception e) {
+			System.out.println(e.getStackTrace());
+			return "-2";
+		}
+		return flag; 
+	}
+
+	/**
+	 * 根据用户ID   查询    订单号    和    状态 (在洗涤中，则状态为  33 ； 否则 显示 应用中 订单 状态信息 )
+	 * @param userId
+	 * @return
+	 */
+	public String findOrder(int userId){
+		ResultSet rs = null;
+		JSONStringer json = new JSONStringer();     
+		String sql = "SELECT orderId,status,runNo FROM _order WHERE userId = ? order by generateTime desc";
+		PreparedStatement ps = db.getPreparedStatement(sql);
+		try {
+			ps.setInt(1, userId); 
+			rs = ps.executeQuery();
+			if(rs.next()){
+				json.array();
+				if(isWashing(rs.getString("runNo"))==1){
+					json.object().key("orderId").value(rs.getString("orderId")).
+					key("status").value("33").endObject();
+				}else{
+					json.object().key("orderId").value(rs.getString("orderId")).
+					key("status").value(rs.getString("status")).endObject();
+				}
+				
+				while(rs.next()){
+					if(isWashing(rs.getString("runNo"))==1){  //工厂 洗涤中，返回状态 ：33
+						json.object().key("orderId").value(rs.getString("orderId")).
+						key("status").value("33").endObject();
+					}else{ // 不在洗涤中，则查询 应用端  订单记录 的状态信息 
+						json.object().key("orderId").value(rs.getString("orderId")).
+						key("status").value(rs.getString("status")).endObject();
+					}
+				}
+				
+				json.endArray();
+				return json.toString();
+			}else{
+				return "[]";
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}finally{
+			if(rs != null){
+				try {
+					rs.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+			if(ps!=null){
+				try {
+					ps.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+		}
+		return "[]";
+	}
+	
+	/**
+	 * 判断   该 订单 是否在工厂 洗涤中 
+	 * @param runNo
+	 * @return   1： 洗涤中 ;-1 : 已经完成 ，该查询 手机端  订单信息
+	 */
+	public int isWashing(String runNo){
+		int iswash = -1;
+		ResultSet rs = null;
+		
+		String sql = "SELECT bill_no ,MIN(state) AS state FROM laundry.dbo.cloth_info WHERE  bill_no=? GROUP BY bill_no ";
+		PreparedStatement ps = db.getPreparedStatement(sql);
+		try {
+			ps.setString(1, runNo);
+			rs = ps.executeQuery();
+			if(rs.next()){
+				if(rs.getInt("state")<10){
+					iswash = 1 ;  // 洗涤中
+				}else{
+					iswash = -1 ;
+				}
+			}else{
+				return -1;
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally{
+			if(rs != null){
+				try {
+					rs.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+			if(ps!=null){
+				try {
+					ps.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+		}
+		return iswash;
+	}
+	
+	/**
+	 * 根据订单号  查询 订单详细信息   
+	 *     如果状态 为 31 ，即 物流人员 确认接单 则 显示 物流人员 手机号码  
+	 * @param orderId
+	 * @return
+	 */
+	public String findOrderByOrderId(String orderId){
+		PreparedStatement ps = null ;
+		ResultSet rs = null ;
+		JSONObject jsonObject = new JSONObject();     
+		String tel = "" ;
+		
+		String sql = "SELECT * FROM _order WHERE orderId = '"+orderId+"'";
+		ps = db.getPreparedStatement(sql);
+		try {
+			rs = ps.executeQuery();
+			if(rs.next()){
+				int status = Integer.valueOf(rs.getString("status"));
+				if(status>=31&&status<40){ //已被接单后 
+					String telSql = "SELECT tel FROM _staff WHERE staffId= ? " ;
+					PreparedStatement telPs = db.getPreparedStatement(telSql);
+					telPs.setString(1, rs.getString("staffId"));  
+					ResultSet telRs = telPs.executeQuery();
+					
+					if(telRs.next()){
+						tel = telRs.getString("tel");
+						System.err.println("用户订单状态  （物流接单 31  则显示 物流人员 电话 ）  ：  " + tel); 
+					}
+				}
+				//付款之后，显示 金额和 衣物件数
+				if(status>31&&status<40){
+					String fsql = "SELECT typeMoney,clothesNum FROM _financial WHERE orderId= ? " ;
+					PreparedStatement fps = db.getPreparedStatement(fsql);
+					fps.setString(1, orderId);  
+					ResultSet frs = fps.executeQuery();
+					
+					if(frs.next()){
+						jsonObject.put("money", frs.getString("typeMoney"));
+						jsonObject.put("clothesNum", frs.getString("clothesNum"));
+						System.err.println("用户付款之后，显示 ：" +frs.getString("typeMoney")+"  "+frs.getString("clothesNum"));
+					}
+				}
+				jsonObject.put("large", rs.getString("large"));
+				jsonObject.put("amount", rs.getString("amount"));
+				jsonObject.put("address", rs.getString("address"));
+				jsonObject.put("takePhone", rs.getString("takePhone"));
+				jsonObject.put("note", rs.getString("note"));
+				jsonObject.put("userId", rs.getString("userId"));
+				jsonObject.put("generateTime", rs.getString("generateTime"));
+				jsonObject.put("status", rs.getString("status"));
+				jsonObject.putOnce("userName", rs.getString("userName"));
+				jsonObject.put("tel", tel);
+				return jsonObject.toString();
+			}else{
+				return "{}";
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}finally{
+			CloseResource.close(ps, rs); 
+		}
+		return "{}";
+	}
+	
+	/**
+	 * 查询  分配给该物流人员   未被接收的订单
+	 * @return
+	 */
+	public String findUnOrder(String staffId){
+		ResultSet rs = null;
+		JSONStringer json = new JSONStringer();
+		String sql = "SELECT _order.large,_order.amount,_order.address,_order.note,_order.orderId,_order.generateTime,_order.status ,_order.longitude,_order.latitude,_order.userName,_users.phone"
+				+ " FROM _order,_users WHERE _users.id=_order.userId AND _order.status = 30 AND _order.staffId=? "
+				+ "ORDER BY _order.generateTime DESC";
+		PreparedStatement ps = db.getPreparedStatement(sql);
+		try {
+			ps.setString(1, staffId);
+			rs = ps.executeQuery();
+			if(rs.next()){
+				json.array();
+				json.object().key("large").value(rs.getString("large")).
+				key("amount").value(rs.getString("amount")).
+				key("address").value(rs.getString("address")).
+				key("note").value(rs.getString("note")).
+				key("orderId").value(rs.getString("orderId")).
+				key("generateTime").value(rs.getString("generateTime")).
+				key("userName").value(rs.getString("userName")).
+				key("userPhone").value(rs.getString("phone")).
+				key("status").value(rs.getString("status")).
+				key("longitude").value(rs.getString("longitude")).
+				key("latitude").value(rs.getString("latitude")).
+				endObject();
+				while(rs.next()){
+					json.object().key("large").value(rs.getString("large")).
+					key("amount").value(rs.getString("amount")).
+					key("address").value(rs.getString("address")).
+					key("note").value(rs.getString("note")).
+					key("orderId").value(rs.getString("orderId")).
+					key("generateTime").value(rs.getString("generateTime")).
+					key("userName").value(rs.getString("userName")).
+					key("userPhone").value(rs.getString("phone")).
+					key("status").value(rs.getString("status")).
+					key("longitude").value(rs.getString("longitude")).
+					key("latitude").value(rs.getString("latitude")).
+					endObject();
+				}
+				json.endArray();
+				return json.toString();
+			}else{
+				return "[]";
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}finally{
+			if(rs != null){
+				try {
+					rs.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+			if(ps!=null){
+				try {
+					ps.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+		}
+		return "[]";
+	}
+	
+	
+	/**
+	 * 判断 此 订单 是否是   该 物流人员 的订单 
+	 * @param staffId
+	 * @param orderId
+	 * @return
+	 */
+	public int isStaffOrder(String staffId,String orderId){
+		int flag = -1;
+		PreparedStatement ps = null;
+		ResultSet rs = null ;
+		try {
+				String sql = "SELECT * FROM _order WHERE staffId = ? and orderId= ?";
+				ps = db.getPreparedStatement(sql);
+				ps.setString(1, staffId);
+				ps.setString(2, orderId);
+				rs = ps.executeQuery();
+				if(rs.next()){
+					flag = 1 ; // 是 该 物流人员 的 订单 
+				}
+		} catch (Exception e) {
+			System.out.println(e.getStackTrace());
+			return -2;
+		}finally{
+			CloseResource.close(ps, rs); 
+		}
+		return flag; 
+	}
+	
+	
+	/**
+	 * 物流人员接单，将status 置31 
+	 * @param orderId
+	 * @return
+	 */
+	public String acceptOrder(String staffId,String orderId){
+		String flag = "-2";
+		try {
+				String sql = "UPDATE _order SET status= 31,staffId=? WHERE orderId = ?";
+				PreparedStatement ps = db.getPreparedStatement(sql);
+				ps.setString(1, staffId);
+				ps.setString(2, orderId); 
+				int flg = ps.executeUpdate();
+				ps.close();
+				if(flg == 1){
+					flag = "1";//成功
+				}else{
+					flag = "-2";//失败
+				}
+		} catch (Exception e) {
+			System.out.println(e.getStackTrace());
+			return "-2";
+		}
+		return flag; 
+	}
+	
+	
+	/**
+	 * 查询 订单 状态 
+	 * @param orderId
+	 * @return
+	 */
+	public int orderStatus(String orderId){
+		int flag = -1;
+		ResultSet rs = null ;
+		PreparedStatement ps = null;
+		try {
+				String sql = "SELECT status FROM _order WHERE orderId= ?";
+				ps = db.getPreparedStatement(sql);
+				ps.setString(1, orderId);
+				rs = ps.executeQuery();
+				if(rs.next()){
+					flag =Integer.parseInt(rs.getString("status"))  ; // 是 该 物流人员 的 订单 
+				} 
+		} catch (Exception e) {
+			System.out.println(e.getStackTrace());
+			return -2;
+		}finally{
+			CloseResource.close(ps, rs); 
+		}
+		return flag; 
+	}
+	
+	
+	/**
+	 * 根据物流人员工号查询 他所接受的订单信息
+	 * @param staffId
+	 * @return
+	 */
+	public String findOrderByStaffId(String staffId){
+		ResultSet rs = null;
+		PreparedStatement ps = null ;
+		JSONStringer json = new JSONStringer();
+		try {
+			String sql = "SELECT * FROM _order WHERE  status = 31 AND  staffId=? ORDER BY  generateTime DESC";
+			ps = db.getPreparedStatement(sql);
+			ps.setString(1, staffId);
+			rs = ps.executeQuery();
+			
+			if(rs.next()){
+				json.array();
+				json.object().key("large").value(rs.getString("large")).
+				key("amount").value(rs.getString("amount")).
+				key("address").value(rs.getString("address")).
+				key("note").value(rs.getString("note")).
+				key("orderId").value(rs.getString("orderId")).
+				key("generateTime").value(rs.getString("generateTime")).
+				key("userName").value(rs.getString("userName")).
+				key("userPhone").value(rs.getString("takePhone")). //下单时，用户填写的取衣电话
+				key("status").value(rs.getString("status")).
+				key("longitude").value(rs.getString("longitude")).
+				key("latitude").value(rs.getString("latitude")).
+				endObject();
+				while(rs.next()){
+					json.object().key("large").value(rs.getString("large")).
+					key("amount").value(rs.getString("amount")).
+					key("address").value(rs.getString("address")).
+					key("note").value(rs.getString("note")).
+					key("orderId").value(rs.getString("orderId")).
+					key("generateTime").value(rs.getString("generateTime")).
+					key("userName").value(rs.getString("userName")).
+					key("userPhone").value(rs.getString("takePhone")).
+					key("status").value(rs.getString("status")).
+					key("longitude").value(rs.getString("longitude")).
+					key("latitude").value(rs.getString("latitude")).
+					endObject();
+				}
+				json.endArray();
+				return json.toString();
+			}else{
+				return "[]";
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}finally{
+			CloseResource.close(ps, rs); 
+		}
+		return "[]";
+	}
+	
+
+
+	/**
+	 * 物流人员收款
+	 * @param orderPay ; typePay: 付款类型 （现金， 代金券，银行卡   付款方式）; typeMoeny： 每一付款方式的金额
+	 * @return  成功：返回订单号 ； 失败：-1
+	 */
+	public String orderPay(Pay orderPay, String typePay ,String typeMoney)  {
+		
+		String staffId = orderPay.getStaffId();
+		String orderId = orderPay.getOrderId() ;
+		String runNo = orderPay.getRunNo() ;
+		String payDate = orderPay.getPayDate();
+		String totalPrice = orderPay.getTotalPrice();
+		String lastPrice = orderPay.getLastPrice() ;
+		String discount = orderPay.getDiscount();
+		
+		String clothesNum = orderPay.getClothesNum();
+		String userTel = orderPay.getUserTel() ;
+		
+		
+		String flag = "-2";
+		try {
+				String sql = "INSERT INTO _financial(runNo,staffId,totalPrice,lastPrice,payTime,orderId,typePay,typeMoney,disrate,clothesNum,userTel) "
+						+ "VALUES(?,?,?,?,?,?,?,?,?,?,?)";
+
+				PreparedStatement ps = db.getPreparedStatement(sql);
+				
+				ps.setString(1, runNo);
+				ps.setString(2, staffId);
+				ps.setString(3, totalPrice);
+				ps.setString(4, lastPrice);
+				ps.setString(5, payDate);
+				ps.setString(6, orderId);
+				
+				ps.setString(7, typePay);
+				ps.setString(8, typeMoney);
+				
+				ps.setString(9, discount); 
+				ps.setString(10, clothesNum);
+				ps.setString(11, userTel);
+				
+				int flg = ps.executeUpdate();
+				
+				ps.close();
+				if(flg == 1){
+					flag = "1";// 付款 成功
+				}else{
+					flag = "-2";//失败
+				}
+		} catch (Exception e) {
+			System.out.println(e.getStackTrace());
+			return "-3";
+		}
+		return flag; 
+	}
+
+	/**
+	 *  物流人员 收款  充值卡   付款方式
+	 * @param orderPay
+	 * @param typePay
+	 * @param typeMoney
+	 * @return
+	 */
+	public String orderPayCzk(Pay orderPay,String hykType,String hykNo ,String hykMoney,String beforePay, String afterPay)  {
+		
+		String staffId = orderPay.getStaffId();
+		String orderId = orderPay.getOrderId() ;
+		String runNo = orderPay.getRunNo() ;
+		String payDate = orderPay.getPayDate();
+		String totalPrice = orderPay.getTotalPrice();
+		String lastPrice = orderPay.getLastPrice() ;
+		String discount = orderPay.getDiscount();
+		
+		String clothesNum = orderPay.getClothesNum();
+		String userTel = orderPay.getUserTel() ;
+		
+		String flag = "-2";
+		try {
+				String sql = "INSERT INTO _financial(runNo,staffId,totalPrice,lastPrice,payTime,orderId,typePay,typeMoney,disrate,czkBefore,czkAfter,czkNum,clothesNum,userTel) "
+						+ "VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+
+				PreparedStatement ps = db.getPreparedStatement(sql);
+				
+				ps.setString(1, runNo);
+				ps.setString(2, staffId);
+				ps.setString(3, totalPrice);
+				ps.setString(4, lastPrice);
+				ps.setString(5, payDate);
+				ps.setString(6, orderId);
+				
+				ps.setString(7, hykType);
+				ps.setString(8, hykMoney);
+				
+				ps.setString(9, discount); 
+				
+				ps.setString(10, beforePay);
+				ps.setString(11, afterPay);
+				ps.setString(12,hykNo);
+				ps.setString(13, clothesNum);
+				ps.setString(14, userTel);
+				
+				int flg = ps.executeUpdate();
+				
+				ps.close();
+				if(flg == 1){
+					flag = "1";// 付款 成功
+				}else{
+					flag = "-2";//失败
+				}
+		} catch (Exception e) {
+			System.out.println(e.getStackTrace());
+			return "-3";
+		}
+		return flag; 
+	}
+	
+	/**
+	 *  物流人员 收款 后    将 订单状态  改为 32   添加 流水号 runNo
+	 *  
+	 *  将 流水号 runNo 添加到 衣物信息表 _myclothes 中 
+	 * @param orderId
+	 * @return
+	 */
+	public String updateOrderState(String orderId,String runNo){
+		String flag = "-1";
+		try {
+				String sql = "UPDATE _order SET status=32 ,runNo=? WHERE orderId =? ";
+				PreparedStatement ps = db.getPreparedStatement(sql);
+				ps.setString(1, runNo);
+				ps.setString(2, orderId);
+				
+				String clothSql = "UPDATE _myclothes SET runNo=? WHERE orderId=?";
+				PreparedStatement clothPs = db.getPreparedStatement(clothSql);
+				clothPs.setString(1, runNo);
+				clothPs.setString(2, orderId);
+				
+				int flg = ps.executeUpdate();
+				int fl = clothPs.executeUpdate();
+				System.err.println(flg + " :  " + fl); 
+				
+				ps.close();
+				clothPs.close();
+				
+				if(flg ==1 && fl!=0){
+					flag = "1";//  修改 成功
+				}else{
+					flag = "-1";//  修改失败
+				}
+				
+		} catch (Exception e) {
+			System.out.println(e.getStackTrace());
+			return "-2";
+		}
+		return flag; 
+	}
+	
+	/**
+	 * 该 订单 是否已经付款 
+	 * @param orderId
+	 * @return
+	 */
+	public String findOrderState(String orderId){
+		ResultSet rs =null;
+		PreparedStatement ps = null;
+		String flag = "-1";
+		try {
+				String sql = "SELECT * FROM _order WHERE orderId=? AND status BETWEEN 32 AND 37";
+				ps = db.getPreparedStatement(sql);
+				ps.setString(1, orderId);
+				rs = ps.executeQuery();
+				if(rs.next()){
+					flag = "-1";// 已经付款 
+				}
+				else{
+					flag = "1";//   未 付款
+				}
+		} catch (Exception e) {
+			System.out.println(e.getStackTrace());
+			return "-2";
+		}finally{
+			CloseResource.close(ps, rs); 
+		}
+		return flag; 
+	}
+	
+	
+	/**
+	 * 物流人员拒单
+	 * @param refuse 
+	 * @param staffId 
+	 * @param orderId 
+	 * @return
+	 */
+	public String  refuseOrder(String orderId, String staffId, String refuse) {
+		String flag = "-2";
+		JSONStringer json=new JSONStringer();
+		try {
+			json.object();
+		} catch (JSONException e1) {
+			e1.printStackTrace();
+		}
+		try {
+				String sql = "UPDATE _order SET status= 40,refuse=?,staffId=? WHERE orderId = ?";
+				PreparedStatement ps = db.getPreparedStatement(sql);
+				System.out.println("resuse:"+refuse);
+				ps.setString(1, refuse);
+				ps.setString(2, staffId);
+				ps.setString(3, orderId); 
+				int flg = ps.executeUpdate();
+				ps.close();
+				if(flg == 1){
+					flag = "1";//成功
+				}
+				else{
+					flag = "-2";//失败
+				}
+				
+				System.out.println("flag:"+flg);
+				
+			  String sql2="select longitude,latitude from _order where orderId='"+orderId+"'";
+	          ResultSet rSet=db.executeQuery(sql2);
+	          if(rSet.next()){
+	        	  json.key("flag").value(flag).key("lon").value(rSet.getString("longitude")).key("lan").value(rSet.getString("latitude")).endObject();
+	          }
+		else {
+			json.endObject();
+		}
+		
+		} catch (Exception e) {
+			System.out.println(e.getStackTrace());
+			flag="-3";
+			try {
+				json.key("flag").value(flag).endObject();
+			} catch (JSONException e1) {
+				e1.printStackTrace();
+			}
+			
+		}
+		return json.toString(); 
+	}
+	
+	/**
+	 *  查询 送衣订单 
+	 * @param staffId
+	 * @return
+	 */
+	public String findSendOrder222(String staffId) {
+		ResultSet rs = null;
+		ResultSet allRs = null;
+		JSONStringer json = new JSONStringer();  
+		String sql = "SELECT count(*) num, bill_no,custom_tel,custom_name  FROM laundry.dbo.cloth_info "
+				+ "WHERE employee=? AND state =10 GROUP BY bill_no,custom_tel,custom_name";
+		
+		String allSql = "SELECT count(*) allNum, bill_no FROM laundry.dbo.cloth_info "
+				+ "WHERE employee=? GROUP BY bill_no" ;
+		
+		PreparedStatement ps = db.getPreparedStatement(sql);
+		PreparedStatement allPs = db.getPreparedStatement(allSql);
+		
+		try {
+			ps.setString(1, staffId);
+			rs = ps.executeQuery();
+			
+			allPs.setString(1, staffId);
+			allRs = allPs.executeQuery();
+			 
+			if(rs.next()&&allRs.next()){
+			
+				json.array();
+				if(rs.getString("num").equals(allRs.getString("allNum"))){
+					
+						json.object().key("runNo").value(rs.getString("bill_no")).
+						key("userName").value(rs.getString("custom_name")).
+						key("userTel").value(rs.getString("custom_tel")).
+						key("number").value(rs.getString("num")).
+						endObject();
+				}
+				while(rs.next()&&allRs.next()){
+					if(rs.getString("num").equals(allRs.getString("allNum"))){
+						json.object().key("runNo").value(rs.getString("bill_no")).
+						key("userName").value(rs.getString("custom_name")).
+						key("userTel").value(rs.getString("custom_tel")).
+						key("number").value(rs.getString("num")).
+						endObject();
+					}
+				}
+				json.endArray();
+				return json.toString();
+			}else{
+				return "[]";
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}finally{
+			CloseResource.close(ps, rs); 
+			CloseResource.close(allPs, allRs); 
+		}
+		return "[]";
+	}
+
+}

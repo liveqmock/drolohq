@@ -1,0 +1,74 @@
+<%@ page import="wph.iframework.utils.WebsiteUtils"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+	<script type="text/javascript" src="../js/jquery-1.2.6.min.js"></script>
+	<script type="text/javascript" src="../js/jquery.blockUI.js"></script>
+	<script type="text/javascript" src="../js/work/orperatorOrder.js"></script>
+	<script type="text/javascript" src="../js/PageUtils.js"></script>
+	<title>用户订单</title>
+	<%
+		String basePath = WebsiteUtils.getRootPath(request);
+		int oid = (Integer) request.getSession().getAttribute("oid");
+	%>
+</head>
+
+<body>
+<div class="header" id="header"   width: 1000px; height: 100px;>
+<jsp:include  page="../includes/header.jsp" flush="true">
+		<jsp:param name="navno" value="1" />
+  </jsp:include>
+</div>
+
+	<div id="orderjieguo" class="orderjieguo"
+		style="border: 1px solid #dddddd; width: 81%; height: 800px; margin-left: auto; margin-right: auto;">
+
+		<div id="dingdanorder" style="text-align: center;">
+			<form method="post" name="dingdanorderForm" id="dingdanorderForm">
+				<table width="99%" border="0" align="center" id="dingdanorder_Id2">
+					<tr bgcolor="#ECFAF9" height="44">
+						<td width="61">订单号</td>
+						<td width="61">用户电话</td>
+						<td width="61">用户姓名</td>
+						<td width="61">用户地址</td>
+						<td width="61">物流人员号</td>
+						<td width="61">状态</td>
+						<td width="61">订单创建时间</td>
+						<td width="78">重新派单</td>
+					</tr>
+					<tbody id='ordercheckAllContent'></tbody>
+				</table>
+				<div id="ordercheckAllController" class="page"
+					style="text-align: center;"></div>
+			</form>
+		</div>
+	</div>
+
+	<div id="repaidanzi" style="display: none;">
+		<form name="repaidan" id="repaidan">
+			<table width="524" border="0">
+				<tr>
+					<td width="139" class="class1">订单号：</td>
+					<td width="375" id="ordernum" class="class2"></td>
+				</tr>
+				<tr>
+					<td class="class1">原物流人员号：</td>
+					<td class="class2" id="orderStaffnum""></td>
+				</tr>
+				<tr>
+					<td class="class1">新的物流人员号：</td>
+					<td class="class2"><input type="text" name="neworderStaffnum"
+						id="neworderStaffnum"></td>
+				</tr>
+				<tr>
+					<td colspan="2" align="center"><input type="button"
+						name="btnadd" id="editbtnadd" value="提交 "
+						OnClick="orderedit_update();"></td>
+				</tr>
+			</table>
+		</form>
+	</div>
+</body>
+</html>

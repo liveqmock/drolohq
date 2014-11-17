@@ -1,0 +1,78 @@
+package ouc.drolo.action.user;
+
+import java.io.IOException;
+import java.sql.SQLException;
+
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import ouc.drolo.dao.UserDao;
+import wph.iframework.Action;
+import wph.iframework.dao.db.Database;
+import wph.iframework.dao.db.SqlServer;
+
+/**   06-18 添加用户注册 时间 
+ * 用户注册  
+ * @author jeep
+ *
+ */
+public class UserRegisterAction extends Action{
+
+	@Override
+	public String execute(HttpServletRequest request,
+			HttpServletResponse response) throws ServletException, IOException {
+		
+//		String name = request.getParameter("name");
+//		name = new String(name.getBytes("ISO-8859-1"), "UTF-8");
+		
+		String userYzm = request.getParameter("yzm");
+		String myYzm = UserGetYzmAction.getYzm();
+		
+		System.out.println("系统生成验证码: "+myYzm+"-------用户 提交的验证码 : "+userYzm); 
+		
+		String password = request.getParameter("password");
+		String phone = request.getParameter("phone");
+		
+//		String city = request.getParameter("city");
+//		city = new String(city.getBytes("ISO-8859-1"), "UTF-8");
+		
+//		String sex = request.getParameter("sex");
+		
+		System.out.println("注册电话   ：    "+phone);
+		
+		Database db=null;
+		String str="";
+		
+		if(!userYzm.equals(myYzm)){
+			str = "-1";    // 验证码 不对
+		}else{
+			try {
+				 db=new SqlServer();
+				 db.setAutoCommit(false);
+				 
+				 UserDao userDao = new UserDao(db);
+				 str = userDao.register(phone,password);
+				 db.commit();
+	
+			} catch (ClassNotFoundException e) {
+				e.printStackTrace();
+			} catch (SQLException e) {
+				e.printStackTrace();
+					try {
+						db.rollback();
+					} catch (SQLException e1) {
+						e1.printStackTrace();
+					}
+			}finally{
+				if(db!=null){
+					db.close();
+				}
+			}
+			
+		}
+		return str; 
+		
+	}
+		
+}

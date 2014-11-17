@@ -1,0 +1,46 @@
+package ouc.drolo.action.staff;
+
+import java.io.IOException;
+import java.sql.SQLException;
+
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import ouc.drolo.dao.StaffDao;
+import wph.iframework.Action;
+import wph.iframework.dao.db.Database;
+import wph.iframework.dao.db.SqlServer;
+
+/**
+ * 物流人员  查询 送衣 订单
+ * 	   在  _order 表中 订单 状态 为  34 
+ * @author jeep
+ *
+ */
+public class StaffSendOrderAction extends Action {
+
+	@Override
+	public String execute(HttpServletRequest request,
+			HttpServletResponse response) throws ServletException, IOException {
+		
+		String staffId = request.getParameter("staffId");
+		
+		String orderInfo = "" ;
+		try {
+			Database dbDatabase =  new SqlServer();
+			dbDatabase.setAutoCommit(false);
+			StaffDao sd = new StaffDao(dbDatabase); 
+			orderInfo = sd.findSendOrder(staffId); 
+			dbDatabase.commit();
+			dbDatabase.close();
+			System.out.println("物流人员查询     送衣订单 ：       "+orderInfo);
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return orderInfo;
+	}
+
+}

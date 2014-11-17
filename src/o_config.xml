@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE actions PUBLIC "-//WPH-IF" "if.dtd">
+<if>
+	<package namespace="/">
+		<!-- test -->
+		<action name="test2" class="ouc.drolo.action.area.test2">
+			<database auto="true" transaction="true" />
+		</action>
+
+		<!-- 删除区域 -->
+		<action name="deleteAereInfo" class="ouc.drolo.action.area.deleteAereInfo">
+			<database auto="true" transaction="true" />
+		</action>
+		
+		<!-- 按条件查询区域 -->
+		<action name="areaByquest" class="ouc.drolo.action.area.areaByquest">
+			<database auto="true" transaction="true" />
+		</action>
+		<!-- 更新区域 -->
+		<action name="editAddArea" class="ouc.drolo.action.area.editAddArea">
+			<database auto="true" transaction="true" />
+		</action>
+		<!-- 查询区域 -->
+		<action name="areaselect" class="ouc.drolo.action.area.areaSelect">
+			<database auto="true" transaction="true" />
+		</action>
+		
+		<!-- 添加新区域 -->
+		<action name="addArea" class="ouc.drolo.action.area.addArea">
+			<database auto="true" transaction="true" />
+		</action>
+		
+		<!-- 接线员登陆 -->
+		<action name="webLogin" class="ouc.drolo.action.orperator.webLogin">
+			<database auto="true" transaction="true" />
+		</action>
+
+		<!-- 订单查询 -->
+		<action name="orderPage" class="ouc.drolo.action.orperator.orderPage">
+			<database auto="true" transaction="true" />
+		</action>
+
+		<!-- 查询单个配送员信息 -->
+		<action name="editStafInfo" class="ouc.drolo.action.orperator.editStafInfo">
+			<database auto="true" transaction="true" />
+		</action>
+
+		<!-- 提交单个配送员更改好的信息 -->
+		<action name="insertEidtStafInf" class="ouc.drolo.action.orperator.insertEidtStafInf">
+			<database auto="true" transaction="true" />
+		</action>
+
+		<!-- 删除单个配送人员的信息 -->
+		<action name="deleteInfo" class="ouc.drolo.action.orperator.deleteInfo">
+			<database auto="true" transaction="true" />
+		</action>
+
+		<!-- 按条件查询配送人员的信息 -->
+		<action name="PageByquest" class="ouc.drolo.action.orperator.PageByquest">
+			<database auto="true" transaction="true" />
+		</action>
+
+		<!-- 按条件查询附件配送人员的位置 -->
+		<action name="getMyStaff" class="ouc.drolo.action.orperator.getMystaff">
+			<database auto="true" transaction="true" />
+		</action>
+
+		<!-- 添加新的配送人员 -->
+		<action name="addoneStaffInfo" class="ouc.drolo.action.orperator.addoneStaffInfo">
+			<database auto="true" transaction="true" />
+		</action>
+
+		<!-- -->
+		<action name="updteStaff" class="ouc.drolo.action.orperator.updteStaff">
+			<database auto="true" transaction="true" />
+		</action>
+
+		<!--返回所有订单信息 -->
+		<action name="dingdanorderPage" class="ouc.drolo.action.orperator.dingdanorderPage">
+			<database auto="true" transaction="true" />
+		</action>
+
+		<!--重新派单订单 -->
+		<action name="repaidan" class="ouc.drolo.action.orperator.repaidan">
+			<database auto="true" transaction="true" />
+		</action>
+
+		<!--按条件订单查询 -->
+		<action name="orderPageByquest" class="ouc.drolo.action.orperator.orderPageByquest">
+			<database auto="true" transaction="true" />
+		</action>
+
+		<!--更改状态 -->
+		<action name="gaizhuangtai" class="ouc.drolo.action.orperator.gaizhuangtai">
+			<database auto="true" transaction="true" />
+		</action>
+
+		<!--上线 -->
+		<action name="online" class="ouc.drolo.action.orperator.online">
+			<database auto="true" transaction="true" />
+		</action>
+
+		<!--下线 -->
+		<action name="offline" class="ouc.drolo.action.orperator.offline">
+			<database auto="true" transaction="true" />
+		</action>
+		
+		<!--初始化订单 -->
+		<action name="initOrderlist" class="ouc.drolo.action.orperator.initOrderlist">
+			<database auto="true" transaction="true" />
+		</action>
+		
+		<!--回访提交 -->
+		<action name="huifangupdate" class="ouc.drolo.action.orperator.huifangupdate">
+			<database auto="true" transaction="true" />
+		</action>
+		
+		<!-- 回访初始化 -->
+		<action name="initHuifang" class="ouc.drolo.action.orperator.initHuifang">
+			<database auto="true" transaction="true" />
+		</action>
+	</package>
+</if>

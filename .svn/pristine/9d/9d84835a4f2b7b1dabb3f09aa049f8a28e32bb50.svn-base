@@ -1,0 +1,51 @@
+package wph.iframework.startup;
+
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServlet;
+
+import ouc.drolo.action.diaodu.Dispatcher;
+import wph.iframework.push.mqtt.MqttUtils;
+
+/**
+ * Servlet implementation class OnStartup
+ */
+public class OnStartup extends HttpServlet
+{
+    private static final long serialVersionUID = 1L;
+    
+    /**
+     * @see HttpServlet#HttpServlet()
+     */
+    public OnStartup()
+    {
+        super();
+    }
+    
+    @Override
+    public void init() throws ServletException
+    {
+        super.init();
+        Config.configure();
+
+      MqttUtils.startup();
+      Dispatcher.getInstance().startup();
+//     MqttUtils.startup();
+
+//      MqttUtils.startup();
+
+
+//        MqttUtils.startup();
+//        MqttUtils.startup();
+//        ApnsUtils.startup();
+//        MqttSubscriberUtils.startup();
+    }
+    
+    @Override
+    public void destroy()
+    {  MqttUtils.shutdown();
+//        MqttUtils.shutdown();
+//        ApnsUtils.shutdown();
+//        MqttSubscriberUtils.startup();
+        super.destroy();
+    }
+}

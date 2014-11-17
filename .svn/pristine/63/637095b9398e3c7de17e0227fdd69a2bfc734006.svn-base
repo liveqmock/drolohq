@@ -1,0 +1,201 @@
+$(document).ready(
+		 function(){
+			 
+			// doConnect();
+			 
+			// initAssignMap();
+			// initOrderlist();
+          }
+		);
+
+/**
+ * 客服信息  列表
+ * @param pageNumber
+ */
+function listkf(pageNumber){
+	var data = $("#qusetorderForm").serialize();
+	page('../listkf.u', data, pageNumber, 15,
+			'listkf', function() {
+				//$("#order").attr("disabled", true);// 页面内容不可用
+			}, function() {
+				//registerCancelSelectAllListener();
+			}, function() {
+				//$("#order").attr("disabled", false);// 页面内容可用
+			});
+	
+}
+
+/**
+ * 按类别查询 客服人员 信息
+ * @param sid
+ */
+function listkffl(pageNumber){
+	var data = $("#qusetorderForm").serialize();
+	
+	page('../listkffl.u', data, pageNumber, 15,
+			'listkf', function() {
+				//$("#order").attr("disabled", true);// 页面内容不可用
+			}, function() {
+				//registerCancelSelectAllListener();
+			}, function() {
+				//$("#order").attr("disabled", false);// 页面内容可用
+	});
+}
+
+/**
+ * 
+ *  编辑 客服信息
+ * @param sid
+ */
+function edit_info(kfid){
+	var div=document.getElementById("left_top");
+	div.style.display = "none";
+	var div=document.getElementById("jieguo");
+	div.style.display = "none";
+	var div=document.getElementById("edit");
+	div.style.display = "block";
+	//alert("sid"+sid);
+	$.ajax({
+		type : "POST",
+		url : "../editKfInfo.u?",
+		data : "kfid="+kfid,
+	
+		success : function(msg) {
+			
+			var obj = eval('(' +msg + ')');
+			var name=obj.name;
+			var tel=obj.tel;
+			var staffId=obj.staffId;
+			var kfid = obj.kfid;
+			
+			document.getElementById("editname").value=name;
+			document.getElementById("editphone").value=tel;
+			document.getElementById("editStaffId").value=staffId;
+			document.getElementById("kfid").value=kfid;
+		}
+	});
+}
+
+
+/**
+ * 更新客服 人员 信息
+ * @param  kfid
+ */
+function edit_kf(kfid){
+	document.getElementById("kfid").value=kfid;
+	
+	$.ajax({
+		type : "POST",
+		url : "../updatekf.u",		
+		data : $("#editor").serialize(),
+		success : function(msg) {
+			if (msg == 1) {
+				listkf(1);
+				var div=document.getElementById("left_top");
+				div.style.display = "block";
+				var div=document.getElementById("jieguo");
+				div.style.display = "block";
+				var div=document.getElementById("edit");
+				div.style.display = "none";
+			}else {
+				alert("网络异常");
+			}
+		}
+});
+}
+
+
+
+
+/**
+ * 删除一条 客服人员记录
+ * @param sid
+ */
+function delete_kf(kfid){
+	
+	if(window.confirm("您确定删除么 ")){
+		$.ajax({
+			type : "POST",
+			url : "../deletekf.u?",
+			data : "kfid="+kfid,
+		
+			success : function(msg) {
+				if(msg==1){
+					listkf(1);
+					alert("删除成功");
+				}else{
+					alert("删除失败");
+				}
+			}
+			});
+	}
+}
+
+/**
+ * 添加 客服人员 信息 
+ */
+function addkf(){
+	// inintmanage();
+	var div=document.getElementById("left_top");
+	div.style.display = "none";
+	var div=document.getElementById("jieguo");
+	div.style.display = "none";
+	var div=document.getElementById("edit");
+	div.style.display = "none";
+	var div=document.getElementById("addone");
+	div.style.display = "block";
+}
+
+function update_addkf(){
+	$.ajax({
+		type : "POST",
+		url : "../addkf.u",		
+		data : $("#editoraddone").serialize(),
+		beforeSend: function(){
+			var msg = submitMsg();
+			if(msg.length > 0){
+				alert(msg);
+				$("input[name='editbtnaddaddone']").attr("disabled",false);//把"确定"按钮变为可用
+				return false;
+			}
+		},
+		success : function(msg) {
+			if (msg == 1) {
+				alert("添加用户信息成功");
+				var div=document.getElementById("addone");
+				div.style.display = "none";
+				listkf(1);
+				//alert("更新用户信息成功");
+			}
+			else {
+				alert("网络异常");
+			}
+		}
+	});
+}
+
+function submitMsg(){
+	var msg = "";
+	var name = $("input[name='editnameaddone']").val();
+	var password = $("input[name='editpasswdaddone']").val();
+	var tel = $("input[name='editphoneaddone']").val();
+	var staffid = $("input[name='editstaffNumaddone']").val();
+	var kfid =  $("input[name='editkfNumaddone']").val();
+	
+	if (name == "") {
+        msg += "请输入用户姓名！\r";
+    }
+    if (password == "") {
+        msg += "请输入密码！\r";
+    }
+    if (tel== "") {
+        msg += "请输入电话！\r";
+    }
+    if (staffid == "") {
+        msg += "请输入员工号！\r";
+    }
+    if (kfid == "") {
+        msg += "请输入客服人员工号 ！\r";
+    }
+	return msg;
+}

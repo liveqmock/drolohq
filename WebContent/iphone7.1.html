@@ -1,0 +1,28 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml" >
+ <head>
+ 	<meta http-equiv="Content-Type"  content="txt/html;charset=utf-8" />
+	<meta name = "viewport" content = "initial-scale = 0.8" /> 
+<title>
+	iOS下载页面
+</title>
+</head>
+
+<body>
+<!-- position:absolute; top:100px; left:30px; -->
+<!--  <table style="width: 294px; height: 248px"></table> -->
+ 	<img style="display:block;" src="images/logo.png" onclick="install();" />
+ 	<span style="margin-left: 50px;font-size: 15px;font-family: serif;display:block;margin-top:-10px;">点击图片，进行下载</span>
+
+</body>
+
+<script type="text/javascript">
+     install = function(){
+  	    location.href = 'itms-services://?action=download-manifest&url=https://dn-drolohqtest.qbox.me/manifest.plist';
+      }
+</script>
+
+</html>
+

@@ -1,0 +1,73 @@
+package ouc.drolo.action.kf;
+
+public class UserInfo {
+
+	private String phone;
+	private String orderId;
+	private int id ;
+	private String address;
+	private String zctime;
+	
+	
+	public String getZctime() {
+		return zctime;
+	}
+
+	public void setZctime(String zctime) {
+		this.zctime = zctime;
+	}
+
+	public UserInfo() {
+	}
+
+	
+
+	public UserInfo(String phone, String orderId, int id, String address,
+			String zctime) {
+		super();
+		this.phone = phone;
+		this.orderId = orderId;
+		this.id = id;
+		this.address = address;
+		this.zctime = zctime;
+	}
+
+	public String getPhone() {
+		return phone;
+	}
+
+	public void setPhone(String phone) {
+		this.phone = phone;
+	}
+
+	public String getOrderId() {
+		return orderId;
+	}
+
+	public void setOrderId(String orderId) {
+		this.orderId = orderId;
+	}
+
+	public int getId() {
+		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
+	}
+
+	public String getAddress() {
+		return address;
+	}
+
+	public void setAddress(String address) {
+		this.address = address;
+	}
+
+	@Override
+	public String toString() {
+		return "UserInfo [phone=" + phone + ", orderId=" + orderId + ", id="
+				+ id + ", address=" + address + "]";
+	}
+	
+}
